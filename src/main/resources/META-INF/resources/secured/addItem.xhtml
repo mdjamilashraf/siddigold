@@ -1,0 +1,191 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui" dir="ltr">
+    <f:view rendered="true">
+        <h:head>
+            <f:facet name="first">
+                <meta http-equiv="X-UA-Compatible" content="EmulateIE8" />
+                <meta content='text/html; charset=UTF-8' http-equiv="Content-Type"/>
+                <title>Item Master</title>
+            </f:facet>
+        </h:head>
+        <h:body dir="ltr">
+            <h:outputStylesheet name="css/default.css" />
+            <h:form id="itemFrm">
+                <p:layout fullPage="true">
+                    <p:layoutUnit position="north" styleClass="ui-layout-north" style="border: 0px;" size="50">
+                        <ui:include  src="/secured/globalResources/headerMenu.xhtml"  />
+                    </p:layoutUnit>
+                    <p:layoutUnit position="center" style="border: 0px;">
+                        <p:messages id="globalMsgs" showDetail="true"  />
+                        <p:panel header="#{msg.ITEM_MST}" id="itemMstPnl">  
+                            <p:outputPanel id="addItemPnl">
+                                <h:panelGrid columns="4" cellpadding="1" styleClass="jsf-panel-grid-style">
+                                    <h:outputText value="#{msg.ITEM_CODE}:*" />
+                                    <p:inputText id="itemCode" required="true" autocomplete="off" requiredMessage="#{msg.REQUIRED_MESSAGE}" 
+                                                 value="#{addItemView.item.itemCode}">
+                                        <p:message  for="itemCode" display="text" /> 
+                                    </p:inputText>
+                                    <h:outputText value="#{msg.ITEM_NAME}:*" />
+                                    <p:inputText id="itemName" required="true" autocomplete="off" requiredMessage="#{msg.REQUIRED_MESSAGE}" 
+                                                 value="#{addItemView.item.itemName}" >
+                                        <p:message  for="itemName" display="text" /> 
+                                    </p:inputText>
+                                    <h:outputText value="#{msg.UOM}:*" />
+                                    <p:selectOneMenu id="uom" required="true" requiredMessage="#{msg.REQUIRED_MESSAGE}" 
+                                                     value="#{addItemView.item.itemUom}" >
+                                        <f:selectItem itemLabel="Select One" itemValue="" />
+                                        <f:selectItem itemLabel="Gram" itemValue="Gram" />
+                                        <f:selectItem itemLabel="NOS" itemValue="NOS" />
+                                    </p:selectOneMenu>
+                                    <h:outputText value="#{msg.VAT}:*" />
+                                    <p:inputText id="vat" autocomplete="off" required="true" requiredMessage="#{msg.REQUIRED_MESSAGE}" 
+                                                 value="#{addItemView.item.vatPer}" >
+                                        <p:message  for="vat" display="text" /> 
+                                    </p:inputText>
+                                    <h:outputText value="#{msg.CST}:*" />
+                                    <p:inputText id="cst" autocomplete="off" required="true" requiredMessage="#{msg.REQUIRED_MESSAGE}" 
+                                                 value="#{addItemView.item.cstPer}" >
+                                        <p:message  for="cst" display="text" /> 
+                                    </p:inputText>
+                                    <h:outputText value="#{msg.COST_RATE}:*" />
+                                    <p:inputText id="costRate" autocomplete="off" required="true" requiredMessage="#{msg.REQUIRED_MESSAGE}" 
+                                                 value="#{addItemView.item.costRate}" >
+                                        <p:message  for="costRate" display="text" /> 
+                                    </p:inputText>
+                                    <h:outputText value="#{msg.SALES_RATE}:*" />
+                                    <p:inputText id="salesRate" autocomplete="off" required="true" requiredMessage="#{msg.REQUIRED_MESSAGE}" 
+                                                 value="#{addItemView.item.salesRate}" >
+                                        <p:message  for="salesRate" display="text" /> 
+                                    </p:inputText>
+                                    <h:outputText value="#{msg.VAL_PIECE_WISE}:*" />
+                                    <p:selectBooleanCheckbox id="valPiecewise" 
+                                                             value="#{addItemView.item.valPiecewise}" />
+                                         
+                                </h:panelGrid>
+                            </p:outputPanel>
+                            <f:facet name="footer">  
+                                <p:commandButton id="addItem" ajax="false" icon="ui-icon-star" iconPos="right" value="Save" 
+                                                 update="globalMsgs"  action="#{addItemView.addItem()}"  />  
+                                <p:commandButton id="reset" ajax="false" immediate="true" icon="ui-icon-cancel" iconPos="right" value="Reset" 
+                                                 update="globalMsgs"  action="#{addItemView.resetData()}"  />  
+
+                                <p:defaultCommand target="addItem" /> 
+                            </f:facet>
+                        </p:panel>
+                        <p:panel>
+                            <p:outputPanel id="itemDtlPnl" rendered="#{addItemView.showList}">
+                                <p:dataTable id="itemDtl" scrollable="true" scrollHeight="275"
+                                             value="#{addItemView.itemList}"  
+                                             var="item" rowIndexVar="rowIndex"
+                                             widgetVar="itemTable"
+                                             emptyMessage="No Record found with given criteria">
+                                    <p:column style="width: 20px;">
+                                        <f:facet name="header">
+                                            <h:outputText value="#{msg.SR_NO}" />
+                                        </f:facet>
+                                        <div align="center">
+                                            <h:outputText  value="#{rowIndex+1}" />
+                                        </div>
+                                    </p:column>
+                                    <p:column   style="width:100px">
+                                        <f:facet name="header">
+                                            <h:outputText value="#{msg.ITEM_CODE}" />
+                                        </f:facet>
+                                        <div align="center">
+                                            <h:outputText value="#{item.itemCode}"/>
+                                        </div>
+                                    </p:column>
+                                    <p:column   style="width:100px">
+                                        <f:facet name="header">
+                                            <h:outputText value="#{msg.ITEM_NAME}" />
+                                        </f:facet>
+                                        <div align="center">
+                                            <h:outputText value="#{item.itemName}" />
+                                        </div>
+                                    </p:column>
+                                    <p:column   style="width:100px">
+                                        <f:facet name="header">
+                                            <h:outputText value="#{msg.UOM}" />
+                                        </f:facet>
+                                        <div align="center">
+                                            <h:outputText value="#{item.itemUom}" />
+                                        </div>
+                                    </p:column>
+                                    <p:column   style="width:70px">
+                                        <f:facet name="header">
+                                            <h:outputText value="#{msg.VAL_PIECE_WISE}" />
+                                        </f:facet>
+                                        <div align="center">
+                                            <p:selectBooleanCheckbox value="#{item.valPiecewise}" disabled="true" />
+                                        </div>
+                                    </p:column>
+                                    <p:column   style="width:100px">
+                                        <f:facet name="header">
+                                            <h:outputText value="#{msg.VAT}" />
+                                        </f:facet>
+                                        <div align="center">
+                                            <h:outputText value="#{item.vatPer}" />
+                                        </div>
+                                    </p:column>
+                                    <p:column   style="width:100px">
+                                        <f:facet name="header">
+                                            <h:outputText value="#{msg.CST}" />
+                                        </f:facet>
+                                        <div align="center">
+                                            <h:outputText value="#{item.cstPer}" />
+                                        </div>
+                                    </p:column>
+                                    <p:column   style="width:100px">
+                                        <f:facet name="header">
+                                            <h:outputText value="#{msg.COST_RATE}" />
+                                        </f:facet>
+                                        <div align="center">
+                                            <h:outputText value="#{item.costRate}" />
+                                        </div>
+                                    </p:column>
+                                    <p:column   style="width:100px">
+                                        <f:facet name="header">
+                                            <h:outputText value="#{msg.SALES_RATE}" />
+                                        </f:facet>
+                                        <div align="center">
+                                            <h:outputText value="#{item.salesRate}" />
+                                        </div>
+                                    </p:column>
+                                    <p:column style="width:100px" headerText="Action">
+
+                                        <div align="center">
+                                            <p:commandButton id="editItem" ajax="true"
+                                                             style="margin-right:20px;" immediate="true"
+                                                             action="#{addItemView.editItem()}" title="Edit"
+                                                             icon="ui-icon-pencil" update="itemFrm:addItemPnl" process="@this" 
+                                                             oncomplete="PF('itemTable').clearFilters()">
+                                                <f:setPropertyActionListener value="#{item}"
+                                                                             target="#{addItemView.selectedItems}">
+                                                </f:setPropertyActionListener>
+                                            </p:commandButton>
+                                            <p:commandButton id="deleteItem" style="margin-right:20px;" 
+                                                             update="itemFrm:globalMsgs" immediate="true"
+                                                             action="#{addItemView.deleteItems()}" title="Delete"
+                                                             icon="ui-icon-close">
+                                                <p:confirm header="Confirmation" message="Are you sure?"
+                                                           icon="ui-icon-triangle-1-n" />
+                                                <f:setPropertyActionListener value="#{item}"
+                                                                             target="#{addItemView.selectedItems}"></f:setPropertyActionListener>
+                                            </p:commandButton>
+                                        </div>
+                                    </p:column>
+                                </p:dataTable>
+                            </p:outputPanel>
+                        </p:panel>
+                        <p:blockUI block="itemMstPnl" trigger="addItem"  />
+                    </p:layoutUnit>
+                </p:layout>  
+            </h:form>
+        </h:body>
+    </f:view>
+</html>

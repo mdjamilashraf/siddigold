@@ -1,0 +1,200 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui" dir="ltr">
+    <f:view rendered="true">
+        <h:head>
+            <f:facet name="first">
+                <meta http-equiv="X-UA-Compatible" content="EmulateIE8" />
+                <meta content='text/html; charset=UTF-8' http-equiv="Content-Type"/>
+                <title>Order</title>
+            </f:facet>
+        </h:head>
+        <h:body dir="ltr">
+            <h:outputStylesheet name="primeicons/primeicons.css" library="primefaces" />
+            <h:outputStylesheet name="css/default.css" />
+            <h:form id="orderFrm">
+                <p:layout fullPage="true">
+                    <p:layoutUnit position="north" style="border: 0px;" size="50">
+                        <ui:include  src="/secured/globalResources/headerMenu.xhtml"  />
+                    </p:layoutUnit>
+                    <p:layoutUnit position="center" style="border: 0px;">
+                        <p:messages id="msgs" showDetail="true" closable="true" />
+                        <p:panel id="Customer">
+                            <h:panelGrid columns="20">
+                                <p:outputLabel value="Customer:" rendered="#{resetOrdersView.userGrp eq 1000}" />
+                                <p:selectOneMenu value="#{resetOrdersView.searchParam.custCode}" id="custCode" 
+                                                 filter="true" filterMatchMode="startsWith" style="width: 100px;" 
+                                                 rendered="#{resetOrdersView.userGrp eq 10000}" >
+                                    <f:selectItems value="#{resetOrdersView.custList}" />
+                                </p:selectOneMenu>
+                                <p:outputLabel value="Order No" />
+                                <p:inputText value="#{resetOrdersView.searchParam.orderNo}" style="width: 100px;" autocomplete="off"/>
+                                <p:outputLabel value="OrderDate From:" />
+                                <p:calendar
+                                    value="#{resetOrdersView.searchParam.from}" class="dateTimeField" style="width: 150px;"
+                                    autocomplete="off" pattern="dd/MM/yyyy" placeholder="from"/>
+                                <p:outputLabel value="To:" />
+                                <p:calendar
+                                    value="#{resetOrdersView.searchParam.to}" class="dateTimeField" style="width: 150px;"
+                                    autocomplete="off" pattern="dd/MM/yyyy" placeholder="to"/>
+                                <p:outputLabel value="" />
+                                <p:commandButton ajax="false" id="search" value="#{msg.SEARCH}" update="ordrDtlPnl" action="#{resetOrdersView.fetchOrder()}" />
+                                <p:defaultCommand target="search" />
+                            </h:panelGrid>
+                        </p:panel>
+                        <p:outputPanel id="ordrDtlPnl" rendered="#{resetOrdersView.showList}">
+                            <p:dataTable id="order" widgetVar="order" var="order" value="#{resetOrdersView.orders}" 
+                                         editable="true" editMode="cell" scrollable="true" scrollHeight="475"
+                                         selection="#{resetOrdersView.selectedOrdrLst}" sortBy="#{order.orderDtlNo}" rowKey="#{order.orderDtlNo}"
+                                         style="margin-bottom:25px; height: 490px; padding: 0px;" paginator="true"   rows="10" paginatorPosition="bottom">
+
+                                <p:column headerText="SlNo" style="width:15px; text-align: center;">
+                                    <p:cellEditor>
+                                        <f:facet name="output"><h:outputText value="#{order.srlNo}" /></f:facet>
+                                        <f:facet name="input"><h:outputText value="#{order.srlNo}" /></f:facet>
+                                    </p:cellEditor>
+                                </p:column>
+                                <p:column headerText="OrderNo" style="width:25px; text-align: center">
+                                    <p:cellEditor>
+                                        <f:facet name="output"><h:outputText value="#{order.orderNo}" /></f:facet>
+                                        <f:facet name="input"><h:outputText value="#{order.orderNo}" /></f:facet>
+                                    </p:cellEditor>
+                                </p:column>
+                                <p:column headerText="OrderDate" style="width:50px; text-align: center">
+                                    <p:cellEditor>
+                                        <f:facet name="output"><h:outputText value="#{order.formatedOrdrDate}" /></f:facet>
+                                        <f:facet name="input" ><h:outputText value="#{order.formatedOrdrDate}" /></f:facet>
+                                    </p:cellEditor>
+                                </p:column>
+                                <p:column headerText="Code" style="width:25px; text-align: center">
+                                    <p:cellEditor>
+                                        <f:facet name="output"><h:outputText value="#{order.itemCode}" style="width: 25px"/></f:facet>
+                                        <f:facet name="input"><h:outputText value="#{order.itemCode}" style="width: 25px"/>
+                                        </f:facet>
+                                    </p:cellEditor>
+                                </p:column>
+
+                                <p:column headerText="Wt(gm)" style="width:20px; text-align: center;">
+                                    <p:cellEditor>
+                                        <f:facet name="output"><h:outputText value="#{order.weight}" /></f:facet>
+                                        <f:facet name="input">
+                                            <p:inputText value="#{order.weight}" style="width:100%" >
+                                                <p:keyFilter mask="num" />
+                                                <p:ajax event="change" update="@this" />
+                                            </p:inputText>
+                                        </f:facet>
+                                    </p:cellEditor>
+                                </p:column>
+                                <p:column headerText="Size" style="width:25px; text-align: center;">
+                                    <p:cellEditor>
+                                        <f:facet name="output"><h:outputText value="#{order.itemSize}" /></f:facet>
+                                        <f:facet name="input"><h:outputText value="#{order.itemSize}" /></f:facet>
+                                    </p:cellEditor>
+                                </p:column>
+                                <p:column headerText="Qty" style="width:20px; text-align: center;">
+                                    <p:cellEditor>
+                                        <f:facet name="output"><h:outputText value="#{order.qty}" /></f:facet>
+                                        <f:facet name="input"><h:outputText value="#{order.qty}" /></f:facet>
+                                    </p:cellEditor>
+                                </p:column>
+                                <p:column headerText="Melt%" style="width:20px; text-align: center;">
+                                    <p:cellEditor>
+                                        <f:facet name="output"><h:outputText value="#{order.meltPer}" /></f:facet>
+                                        <f:facet name="input">
+                                            <h:outputText value="#{order.meltPer}" />
+                                        </f:facet>
+                                    </p:cellEditor>
+                                </p:column>
+                                <p:column headerText="Stamp" style="width:25px; text-align: center">
+                                    <p:cellEditor>
+                                        <f:facet name="output"><h:outputText value="#{order.stamp}" /></f:facet>
+                                        <f:facet name="input"><h:outputText value="#{order.stamp}" /></f:facet>
+                                    </p:cellEditor>
+                                </p:column>
+                                <p:column headerText="Hook" style="width:50px; text-align: center">
+                                    <p:cellEditor>
+                                        <f:facet name="output"><h:outputText value="#{order.hook}" /></f:facet>
+                                        <f:facet name="input"><h:outputText value="#{order.hook}" /></f:facet>
+                                    </p:cellEditor>
+                                </p:column>
+
+
+                                <p:column headerText="Design Sample" style="width:40px; text-align: center">
+                                    <p:cellEditor>
+                                        <f:facet name="output"><h:outputText value="#{order.designSample}" /></f:facet>
+                                        <f:facet name="input"><h:outputText value="#{order.designSample}" /></f:facet>
+                                    </p:cellEditor>
+                                </p:column>
+                                <p:column headerText="Size Sample" style="width:40px; text-align: center">
+                                    <p:cellEditor>
+                                        <f:facet name="output"><h:outputText value="#{order.sizeSample}" /></f:facet>
+                                        <f:facet name="input"><h:outputText value="#{order.sizeSample}" /></f:facet>
+                                    </p:cellEditor>
+                                </p:column>
+
+                                <p:column headerText="RefNo" style="width:20px; text-align: center">
+                                    <p:cellEditor>
+                                        <f:facet name="output"><h:outputText value="#{order.refNo}" /></f:facet>
+                                        <f:facet name="input"><h:outputText value="#{order.refNo}" /></f:facet>
+                                    </p:cellEditor>
+                                </p:column>
+                                <p:column headerText="Remarks" style="width:100px; text-align: center">
+                                    <p:cellEditor>
+                                        <f:facet name="output"><h:outputText value="#{order.remark}" /></f:facet>
+                                        <f:facet name="input"><h:outputText value="#{order.remark}" /></f:facet>
+                                    </p:cellEditor>
+                                </p:column>
+                                <p:column headerText="Days" style="width:15px; text-align: center">
+                                    <p:cellEditor>
+                                        <f:facet name="output"><h:outputText value="#{order.days}" /></f:facet>
+                                        <f:facet name="input"><h:outputText value="#{order.days}" /></f:facet>
+                                    </p:cellEditor>
+                                </p:column>
+                                <p:column headerText="DueDate" style="width:50px; text-align: center">
+                                    <p:cellEditor>
+                                        <f:facet name="output"><h:outputText id="dueDate" value="#{order.formatedDueDate}" /></f:facet>
+                                        <f:facet name="input"><h:outputText value="#{order.formatedDueDate}" /></f:facet>
+                                    </p:cellEditor>
+                                </p:column>
+                                <p:column headerText="Customer" style="width:100px; text-align: center;" rendered="#{resetOrdersView.userGrp eq 1}">
+                                    <p:cellEditor>
+                                        <f:facet name="output"><h:outputText value="#{order.custName}" /></f:facet>
+                                        <f:facet name="input"><h:outputText value="#{order.custName}" /></f:facet>
+                                    </p:cellEditor>
+                                </p:column>
+                                <p:column headerText="Workshop" style="width:40px; text-align: center;" 
+                                          rendered="#{resetOrdersView.userGrp eq 1}">
+                                    <p:cellEditor>
+                                        <f:facet name="output"><h:outputText value="#{order.workshop}" /></f:facet>
+                                        <f:facet name="input"><h:outputText value="#{order.workshop}" /></f:facet>
+                                    </p:cellEditor>
+                                </p:column>
+                                <p:column selectionMode="multiple" style="width:10px;text-align:center"/>
+                            </p:dataTable>
+                            <p:separator />
+                            <div style="position: absolute;">
+                                <p:outputPanel rendered="#{resetOrdersView.userGrp eq 1}">
+                                    <p:spacer width="500" height="0" />
+                                    <p:commandButton id="dwdAllOrdrStatus" value="DownLoad All"  ajax="false" action="#{resetOrdersView.downloadAllOrder()}"/>
+                                    <p:defaultCommand target="dwdOrdrStatus" />
+                                    <p:commandButton id="dwdOrdrStatus" value="DownLoad" update="msgs ordrDtlPnl" ajax="false" action="#{resetOrdersView.downloadOrder()}"/>
+                                    <p:defaultCommand target="dwdOrdrStatus" />
+                                    <p:spacer width="100" height="0" />
+                                    <p:commandButton value="Delete" update="msgs ordrDtlPnl" ajax="false" action="#{resetOrdersView.deleteOrder()}"/>
+                                    <p:spacer width="10" height="0" />
+                                    <p:commandButton id="dltAllOrdrStatus" value="Delete All" ajax="false" action="#{resetOrdersView.deleteAllOrders()}"/>
+                                </p:outputPanel>
+                            </div>
+                        </p:outputPanel>
+                    </p:layoutUnit>
+                </p:layout>  
+            </h:form>
+        </h:body>
+    </f:view>
+</html>
+
+

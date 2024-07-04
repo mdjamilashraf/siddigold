@@ -1,0 +1,64 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui" dir="ltr">
+<f:view rendered="true" contentType="text/html">
+    <h:head>
+        <f:facet name="first">
+            <meta http-equiv="X-UA-Compatible" content="EmulateIE8" />
+            <meta content='text/html; charset=UTF-8' http-equiv="Content-Type"/>
+            <title>Dashboard</title>
+        </f:facet>
+        <style>
+            
+            .ui-dashboard-column {
+                width: 220px;
+            }
+
+        </style>
+    </h:head>
+    <h:body>
+        <h:outputStylesheet name="css/default.css" />
+        <h:form>
+            <p:layout fullPage="true">
+                <p:layoutUnit position="north" styleClass="ui-layout-north" style="border: 0px;">
+                    <ui:include  src="/secured/globalResources/headerMenu.xhtml"  />
+                </p:layoutUnit>
+                <p:layoutUnit position="center" style="border: 0px;">
+                    <p:growl id="msgs" showDetail="true" />
+                    <p:panel header="Dashboard">
+                        <p:panelGrid columns="4">
+
+                            <p:dashboard id="board" model="#{dashboardView.model}">
+                                <p:ajax event="reorder" listener="#{dashboardView.handleReorder}" update="msgs"/>
+
+                                <p:panel id="CustomerOrder" header="Today's Customer Order">
+                                    <h:outputText value="#{dashboardView.data.todayOrderCnt}"/>
+                                </p:panel>
+
+                                <p:panel id="ConfirmedOrder" header="No of Orders this month">
+                                    <h:outputText value="#{dashboardView.data.monthlyOrderCnt}"/>
+                                </p:panel>
+
+                                <p:panel id="OrderDeliverd" header="Order Deliverd">
+                                    <h:outputText value="20"/>
+                                </p:panel>
+
+                            </p:dashboard>
+                        </p:panelGrid>
+                        
+                    </p:panel>
+                    <p:chart type="bar" model="#{dashboardView.barModel}" style="height:300px; width: 500px"/>
+                </p:layoutUnit>
+                <p:layoutUnit position="south" size="50">
+
+                </p:layoutUnit>
+            </p:layout>  
+        </h:form>
+    </h:body>
+</f:view>
+</html>
+

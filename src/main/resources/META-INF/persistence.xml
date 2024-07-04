@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
+  <persistence-unit name="com.ultimatetek_salesorder_jar_0.0.1-SNAPSHOTPU" transaction-type="RESOURCE_LOCAL">
+    <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
+    <class>com.ultimatetek.entity.MeltingStamp</class>
+    <class>com.ultimatetek.entity.Worker</class>
+    <class>com.ultimatetek.entity.SalesOrder</class>
+    <class>com.ultimatetek.entity.UserDetails</class>
+    <class>com.ultimatetek.entity.OrderDetailsJewelleryHstryKey</class>
+    <class>com.ultimatetek.entity.SalesOrderHstry</class>
+    <class>com.ultimatetek.entity.OrderDetailsJewelleryHstry</class>
+    <properties>
+      <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://192.168.0.120:5432/jewelleryordr"/>
+      <property name="javax.persistence.jdbc.user" value="postgres"/>
+      <property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver"/>
+      <property name="javax.persistence.jdbc.password" value="pgadmin"/>
+    </properties>
+  </persistence-unit>
+</persistence>

@@ -1,0 +1,404 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui" dir="ltr">
+    <f:view rendered="true">
+        <h:head>
+            <f:facet name="first">
+                <meta http-equiv="X-UA-Compatible" content="EmulateIE8" />
+                <meta content='text/html; charset=UTF-8' http-equiv="Content-Type"/>
+                <title>Order</title>
+            </f:facet>
+            <script>
+                function printReport() {
+                    link = window.location.protocol + "//" + window.location.host
+                            + "#{request.contextPath}/print/orderReport?typ=rprt";
+                    mywin = window
+                            .open(link, "Report",
+                                    "location=1,status=1,scrollbars=1,width=800,height=500");
+                    mywin.moveTo(50, 50);
+                }
+                function printReportList() {
+                    link = window.location.protocol + "//" + window.location.host
+                            + "#{request.contextPath}/print/orderReport?typ=lst";
+                    mywin = window
+                            .open(link, "Report",
+                                    "location=1,status=1,scrollbars=1,width=800,height=500");
+                    mywin.moveTo(50, 50);
+                }
+            </script>
+        </h:head>
+        <h:body dir="ltr">
+            <h:outputStylesheet name="css/default.css" />
+            <h:form id="wrkshpOrdrFrm">
+                <p:layout fullPage="true">
+                    <p:layoutUnit position="north" style="border: 0px;" size="50">
+                        <ui:include  src="/secured/globalResources/headerMenu.xhtml"  />
+                    </p:layoutUnit>
+                    <p:layoutUnit position="center" style="border: 0px;">
+                        <p:messages id="msgs" showDetail="true" closable="true" />
+                        <p:panel id="Customer">
+                            <h:panelGrid columns="21" cellpadding="0">
+                                <p:outputLabel value="Customer:" />
+                                <p:selectOneMenu value="#{workshopOrdersView.searchParam.custCode}" id="custCode" 
+                                                 filter="true" filterMatchMode="startsWith" style="width: 80px;">
+                                    <f:selectItems value="#{workshopOrdersView.custList}" />
+                                </p:selectOneMenu>
+                                <p:outputLabel value="Order No" />
+                                <p:inputText value="#{workshopOrdersView.searchParam.orderNo}" style="width: 80px;" autocomplete="off"/>
+                                <p:outputLabel value="Sl No." />
+                                <p:inputText value="#{workshopOrdersView.searchParam.srlNo}" style="width: 50px;" autocomplete="off"/>
+
+                                <p:outputLabel value="Status:" />
+                                <p:selectOneMenu value="#{workshopOrdersView.searchParam.wrkshpStatus}" id="status" 
+                                                 filter="true" filterMatchMode="startsWith" style="width: 80px;">
+                                    <f:selectItems value="#{workshopOrdersView.wrkshpStatusList}" />
+                                </p:selectOneMenu>
+                                <p:outputLabel value="Worker" rendered="true" />
+                                <p:selectOneMenu value="#{workshopOrdersView.searchParam.workerCode}" id="worker" rendered="true"
+                                                 filter="true" filterMatchMode="startsWith" style="width: 80px;" >
+                                    <f:selectItems value="#{workshopOrdersView.workerList}" />
+                                </p:selectOneMenu>
+
+                                <p:outputLabel value="Type" />
+                                <p:selectOneMenu value="#{workshopOrdersView.searchParam.orderTyp}" id="orderTyp" style="width: 80px;" >
+                                    <f:selectItems value="#{workshopOrdersView.orderTypList}" />
+                                </p:selectOneMenu>
+                                <p:outputLabel value="Item" />
+                                <p:inputText value="#{workshopOrdersView.searchParam.itemCode}" style="width: 50px;" autocomplete="off"/>
+                                <p:outputLabel value="RefNo"/>
+                                <p:inputText value="#{workshopOrdersView.searchParam.refNo}" style="width: 50px;" autocomplete="off"/>
+
+                                <p:calendar class="dateTimeField" placeholder="Due Date"
+                                            value="#{workshopOrdersView.searchParam.dueDate}" autocomplete="off" pattern="dd/MM/yyyy"/>
+
+                                <p:calendar class="dateTimeField" placeholder="Status Date"
+                                            value="#{workshopOrdersView.searchParam.statusDate}" autocomplete="off" pattern="dd/MM/yyyy"/>
+                                <p:commandButton ajax="false" value="#{msg.SEARCH}" update="ordrDtlPnl" action="#{workshopOrdersView.fetchOrder()}" />
+                            </h:panelGrid>
+                        </p:panel>
+                        <p:outputPanel id="ordrDtlPnl" rendered="#{workshopOrdersView.showList}">
+                            <p:dataTable id="order" widgetVar="order" var="order" value="#{workshopOrdersView.orders}" 
+                                         editable="true" editMode="cell" scrollable="true" scrollHeight="480"
+                                         style="margin-bottom:50px; height: 500px;" paginator="true"  rows="10"
+                                         paginatorPosition="bottom"  selection="#{workshopOrdersView.selectedOrdrLst}"
+                                         sortBy="#{order.orderDtlNo}" rowKey="#{order.orderDtlNo}">
+                                <p:column headerText="" style="width:15px; text-align: center;">
+                                    <p:commandButton icon="ui-icon-search" 
+                                                     oncomplete="PF('orderDialog').show()"  update="wrkshpOrdrFrm:orderHistDialog wrkshpOrdrFrm:orderHistPnl">
+                                        <f:setPropertyActionListener value="#{order}" target="#{workshopOrdersView.selectedOrders}" />
+                                    </p:commandButton>
+                                </p:column>
+                                <p:column headerText="Order" style="width:20px; text-align: center;">
+                                    <p:cellEditor>
+                                        <f:facet name="output"><h:outputText value="#{order.orderNo}" /></f:facet>
+                                        <f:facet name="input"><h:outputText value="#{order.orderNo}" /></f:facet>
+                                    </p:cellEditor>
+                                </p:column>
+                                <p:column headerText="SLNo" style="width:15px; text-align: center;">
+                                    <p:cellEditor>
+                                        <f:facet name="output"><h:outputText value="#{order.srlNo}" /></f:facet>
+                                        <f:facet name="input"><h:outputText value="#{order.srlNo}" /></f:facet>
+                                    </p:cellEditor>
+                                </p:column>
+                                <p:column headerText="OrderDate" style="width:40px; text-align: center" rendered="false">
+                                    <p:cellEditor>
+                                        <f:facet name="output"><h:outputText value="#{order.formatedOrdrDate}" /></f:facet>
+                                        <f:facet name="input" ><h:outputText value="#{order.formatedOrdrDate}" /></f:facet>
+                                    </p:cellEditor>
+                                </p:column>
+                                <p:column headerText="Code" style="width:25px; text-align: center">
+                                    <p:cellEditor>
+                                        <f:facet name="output"><h:outputText value="#{order.itemCode}" style="width: 25px"/></f:facet>
+                                        <f:facet name="input"><h:outputText value="#{order.itemCode}" style="width: 25px"/>
+                                        </f:facet>
+                                    </p:cellEditor>
+                                </p:column>
+
+                                <p:column headerText="Wt(gms)" style="width:25px; text-align: center;">
+                                    <p:cellEditor>
+                                        <f:facet name="output"><h:outputText value="#{order.weight}" /></f:facet>
+                                        <f:facet name="input">
+                                            <p:inputText value="#{order.weight}" style="width:100%" >
+                                                <p:keyFilter mask="num" />
+                                                <p:ajax event="change" update="@this" />
+                                            </p:inputText>
+                                        </f:facet>
+                                    </p:cellEditor>
+                                </p:column>
+                                <p:column headerText="Size" style="width:25px; text-align: center;">
+                                    <p:cellEditor>
+                                        <f:facet name="output"><h:outputText value="#{order.itemSize}" /></f:facet>
+                                        <f:facet name="input"><h:outputText value="#{order.itemSize}" /></f:facet>
+                                    </p:cellEditor>
+                                </p:column>
+                                <p:column headerText="Qty" style="width:10px; text-align: center;">
+                                    <p:cellEditor>
+                                        <f:facet name="output"><h:outputText value="#{order.qty}" /></f:facet>
+                                        <f:facet name="input"><h:outputText value="#{order.qty}" /></f:facet>
+                                    </p:cellEditor>
+                                </p:column>
+                                <p:column headerText="Melt%" style="width:20px; text-align: center;">
+                                    <p:cellEditor>
+                                        <f:facet name="output"><h:outputText value="#{order.meltPer}" /></f:facet>
+                                        <f:facet name="input">
+                                            <h:outputText value="#{order.meltPer}" />
+                                        </f:facet>
+                                    </p:cellEditor>
+                                </p:column>
+                                <p:column headerText="Stamp" style="width:25px; text-align: center" rendered="false">
+                                    <p:cellEditor>
+                                        <f:facet name="output"><h:outputText value="#{order.stamp}" /></f:facet>
+                                        <f:facet name="input"><h:outputText value="#{order.stamp}" /></f:facet>
+                                    </p:cellEditor>
+                                </p:column>
+                                <p:column headerText="Hook" style="width:50px; text-align: center">
+                                    <p:cellEditor>
+                                        <f:facet name="output"><h:outputText value="#{order.hook}" /></f:facet>
+                                        <f:facet name="input"><h:outputText value="#{order.hook}" /></f:facet>
+                                    </p:cellEditor>
+                                </p:column>
+
+
+                                <p:column headerText="Design Sample" style="width:40px; text-align: center">
+                                    <p:cellEditor>
+                                        <f:facet name="output"><h:outputText value="#{order.designSample}" /></f:facet>
+                                        <f:facet name="input"><h:outputText value="#{order.designSample}" /></f:facet>
+                                    </p:cellEditor>
+                                </p:column>
+                                <p:column headerText="Size Sample" style="width:40px; text-align: center">
+                                    <p:cellEditor>
+                                        <f:facet name="output"><h:outputText value="#{order.sizeSample}" /></f:facet>
+                                        <f:facet name="input"><h:outputText value="#{order.sizeSample}" /></f:facet>
+                                    </p:cellEditor>
+                                </p:column>
+
+                                <p:column headerText="RefNo" style="width:25px; text-align: center" rendered="false">
+                                    <p:cellEditor>
+                                        <f:facet name="output"><h:outputText value="#{order.refNo}" /></f:facet>
+                                        <f:facet name="input"><h:outputText value="#{order.refNo}" /></f:facet>
+                                    </p:cellEditor>
+                                </p:column>
+                                <p:column headerText="Remarks" style="width:100px; text-align: center">
+                                    <p:cellEditor>
+                                        <f:facet name="output"><h:outputText value="#{order.remark}" /></f:facet>
+                                        <f:facet name="input"><h:outputText value="#{order.remark}" /></f:facet>
+                                    </p:cellEditor>
+                                </p:column>
+                                <p:column headerText="Days" style="width:20px; text-align: center" rendered="false">
+                                    <p:cellEditor>
+                                        <f:facet name="output"><h:outputText value="#{order.days}" /></f:facet>
+                                        <f:facet name="input"><h:outputText value="#{order.days}" /></f:facet>
+                                    </p:cellEditor>
+                                </p:column>
+                                <p:column headerText="DueDate" style="width:40px; text-align: center">
+                                    <p:cellEditor>
+                                        <f:facet name="output"><h:outputText id="dueDate" value="#{order.formatedDueDate}" /></f:facet>
+                                        <f:facet name="input"><h:outputText value="#{order.formatedDueDate}" /></f:facet>
+                                    </p:cellEditor>
+                                </p:column>
+                                <p:column headerText="Worker" style="width:40px">
+                                    <p:cellEditor>
+                                        <f:facet name="output"><h:outputText id="wrkrName" value="#{order.wrkrName}" /></f:facet>
+                                        <f:facet name="input">
+                                            <p:selectOneMenu value="#{order.wrkrName}" id="worker" rendered="true"
+                                                             filter="true" filterMatchMode="startsWith" style="width: 100px;" >
+                                                <f:selectItems value="#{workshopOrdersView.workerList}" />
+                                                <p:ajax event="change" update="wrkrName" listener="#{workshopOrdersView.changeWrkrNm(order)}" />
+                                            </p:selectOneMenu>
+                                        </f:facet>
+                                    </p:cellEditor>
+                                </p:column>
+                                <p:column headerText="Customer" style="width:40px">
+                                    <p:cellEditor>
+                                        <f:facet name="output"><h:outputText value="#{order.custName}" /></f:facet>
+                                        <f:facet name="input"><h:outputText value="#{order.custName}" /></f:facet>
+                                    </p:cellEditor>
+                                </p:column>
+                                <p:column headerText="Sample Rcvd" style="width: 15px; text-align: center; align-content: center">
+                                    <p:cellEditor>
+                                        <f:facet name="output">
+                                            <p:selectBooleanCheckbox value="#{order.rcvSample}" style="width:100%" disabled="true"/>
+                                        </f:facet>
+                                        <f:facet name="input">
+                                            <p:selectBooleanCheckbox value="#{order.rcvSample}" style="width:100%" disabled="true" />
+                                        </f:facet>
+                                    </p:cellEditor>
+                                </p:column>
+
+                                <p:column headerText="Fixrate" width="30" style="text-align: center;">
+                                    <p:cellEditor>
+                                        <f:facet name="output"><h:outputText value="#{order.fixRate}" /></f:facet>
+                                        <f:facet name="input"><h:outputText value="#{order.fixRate}" />
+                                        </f:facet>
+                                    </p:cellEditor>
+                                </p:column>
+                                <p:column headerText="Type" style="width:35px">
+                                    <p:cellEditor>
+                                        <f:facet name="output"><h:outputText value="#{order.orderTypLbl}" /></f:facet>
+                                        <f:facet name="input"><h:outputText value="#{order.orderTypLbl}" />
+                                        </f:facet>
+                                    </p:cellEditor>
+                                </p:column>
+                                <p:column headerText="Status" style="width:65px">
+                                    <p:cellEditor>
+                                        <f:facet name="output"><h:outputText id="out_status" value="#{order.wrkshpStatusNm}" /></f:facet>
+                                        <f:facet name="input">
+                                            <p:selectOneMenu id="status" value="#{order.wrkshpStatus}" style="width: 80px;" >
+                                                <f:selectItems value="#{workshopOrdersView.wrkshpStatusList}" />
+                                                <p:ajax event="change" update="out_status" listener="#{workshopOrdersView.changeWrkshpStatus(order)}"/>
+                                            </p:selectOneMenu>
+                                        </f:facet>
+                                    </p:cellEditor>
+                                </p:column>
+                                <p:column headerText="StatusDate" style="width:40px; text-align: center">
+                                    <p:cellEditor>
+                                        <f:facet name="output"><h:outputText value="#{order.formatedStatusDate}" /></f:facet>
+                                        <f:facet name="input">
+                                            <h:outputText  value="#{order.formatedStatusDate}" />
+                                        </f:facet>
+                                    </p:cellEditor>
+
+                                </p:column>
+                                <p:column selectionMode="multiple" style="width:10px;text-align:center"/>
+                            </p:dataTable>
+
+                            <p:panel style="height: 40px;">
+                                <div style="position: absolute;">
+                                    <h:outputText value="Wt(gms)"/>
+                                    <p:inputText value="#{workshopOrdersView.totalOrdrWt}" style="width: 50px;" readonly="true"/>
+                                    <p:selectOneMenu id="newStatus" value="#{workshopOrdersView.updatedOrdrStatus}" 
+                                                     style="width: 100px" >
+                                        <f:selectItems value="#{workshopOrdersView.wrkshpStatusList}" />
+                                        <p:ajax event="change" update="order" listener="#{workshopOrdersView.updateWrkshpStatus()}"/>
+                                    </p:selectOneMenu>
+                                    <p:spacer width="140" height="0" />
+                                    <p:selectCheckboxMenu id="menu" value="#{workshopOrdersView.selectedColumn}" label="Select Columns"
+                                                          filter="false" filterMatchMode="startsWith" 
+                                                          style="width:150px;heigth:50px; margin-left :5px; font-size:10px">
+                                        <f:selectItems value="#{workshopOrdersView.printColumns}" var="entry" itemValue="#{entry.value}" itemLabel="#{entry.label}"/>
+                                    </p:selectCheckboxMenu>
+                                    <p:spacer width="170" height="0" />
+                                    <p:commandButton value="Save" update="msgs ordrDtlPnl" ajax="false" action="#{workshopOrdersView.updateOrderDtl()}"/>
+                                    <p:spacer width="170" height="0" />
+                                    <p:commandButton value="Report" update="msgs ordrDtlPnl" ajax="false" action="#{workshopOrdersView.printReport()}"/>
+                                    <p:commandButton value="List" update="msgs ordrDtlPnl" ajax="false" action="#{workshopOrdersView.printReportList()}"/>
+
+                                </div>
+                            </p:panel>
+
+                        </p:outputPanel>
+
+                    </p:layoutUnit>
+
+                </p:layout>  
+                <p:dialog header="Order History" id="orderHistDialog" widgetVar="orderDialog" modal="true" dynamic="true"
+                          showEffect="fade" hideEffect="fade" resizable="false" width="800" height="500">
+                    <p:outputPanel id="orderHistPnl" style="text-align:center;">
+                        <p:panelGrid  columns="4" rendered="#{not empty workshopOrdersView.selectedOrders}" >
+                            <h:outputText value="Order No:" />
+                            <p:inputText value="#{workshopOrdersView.selectedOrders.orderNo}" readonly="true"/>
+                            <h:outputText value="Order Date:" />
+                            <p:inputText value="#{workshopOrdersView.selectedOrders.formatedOrdrDate}" readonly="true"/>
+                            <h:outputText value="Customer Ref No:" />
+                            <p:inputText value="#{workshopOrdersView.selectedOrders.refNo}" readonly="true"/>
+                            <h:outputText value="Customer:" />
+                            <p:selectOneMenu value="#{workshopOrdersView.selectedOrders.custCode}" style="width: 180px;"
+                                             filter="true" filterMatchMode="startsWith">
+                                <f:selectItems value="#{workshopOrdersView.allCustList}" />
+                                <p:ajax event="change" update="@this" />
+                            </p:selectOneMenu>
+                            <h:outputText value="Item Code:" />
+                            <p:autoComplete value="#{workshopOrdersView.selectedOrders.itemCode}"  
+                                            minQueryLength="2" completeMethod="#{workshopOrdersView.completeText}">
+                                <p:ajax event="itemSelect" update="itemName"  listener="#{workshopOrdersView.onSelectCode()}"/>
+                            </p:autoComplete>
+                            <h:outputText value="Item Name:" />
+                            <p:inputText id="itemName" value="#{workshopOrdersView.selectedOrders.itemName}" readonly="true"/>
+                            <h:outputText value="Weight:" />
+                            <p:inputText value="#{workshopOrdersView.selectedOrders.weight}" readonly="true">
+                                <p:ajax event="change" update="@this" />
+                            </p:inputText>
+                            <h:outputText value="Size:" />
+                            <p:inputText value="#{workshopOrdersView.selectedOrders.itemSize}">
+                                <p:ajax event="change" update="@this" />
+                            </p:inputText>
+                            <h:outputText value="Qty:" />
+                            <p:inputText value="#{workshopOrdersView.selectedOrders.qty}">
+                                <p:ajax event="change" update="@this" />
+                            </p:inputText>
+                            <h:outputText value="Melting:" />
+                            <p:inputText value="#{workshopOrdersView.selectedOrders.meltPer}">
+                                <p:ajax event="change" update="@this" />
+                            </p:inputText>
+                            <h:outputText value="Stamp:" />
+                            <p:inputText value="#{workshopOrdersView.selectedOrders.stamp}" readonly="true">
+                                <p:ajax event="change" update="@this" />
+                            </p:inputText>
+                            <h:outputText value="Hook:" />
+                            <p:inputText value="#{workshopOrdersView.selectedOrders.hook}" >
+                                <p:ajax event="change"/>
+                            </p:inputText>
+                            <h:outputText value="Design Sample:" />
+                            <p:inputText value="#{workshopOrdersView.selectedOrders.designSample}">
+                                <p:ajax event="change" update="@this" />
+                            </p:inputText>
+                            <h:outputText value="Size Sample" />
+                            <p:inputText value="#{workshopOrdersView.selectedOrders.sizeSample}">
+                                <p:ajax event="change" update="@this" />
+                            </p:inputText>
+                            <h:outputText value="Remarks:" />
+                            <p:inputText value="#{workshopOrdersView.selectedOrders.remark}">
+                                <p:ajax event="change" update="@this" />
+                            </p:inputText>
+                            <h:outputText value="Days:" />
+                            <p:inputText value="#{workshopOrdersView.selectedOrders.days}">
+                                <p:ajax event="change" update="@this" />
+                            </p:inputText>
+                            <h:outputText value="Due Date:" />
+                            <p:inputText value="#{workshopOrdersView.selectedOrders.formatedDueDate}" readonly="true">
+                                <p:ajax event="change" update="@this" />
+                            </p:inputText>
+                            <h:outputText value="Workshop:" />
+                            <p:selectOneMenu value="#{workshopOrdersView.selectedOrders.wrkshpCode}" style="width: 180px;"
+                                             filter="true" filterMatchMode="startsWith" >
+                                <f:selectItems value="#{workshopOrdersView.workshopList}" />
+                                <p:ajax event="change" update="@this" />
+                            </p:selectOneMenu>
+
+                            <h:outputText value="Sample" />
+                            <p:selectBooleanCheckbox  value="#{workshopOrdersView.selectedOrders.rcvSample}" >
+                                <p:ajax event="change" update="@this" />
+                            </p:selectBooleanCheckbox>
+                            <h:outputText value="Fix Rate" />
+                            <p:selectOneMenu id="fixRate" value="#{workshopOrdersView.selectedOrders.fixRate}" editable="true" 
+                                             style="width: 180px;" >
+                                <f:selectItem itemLabel="R" itemValue="R" />
+                                <f:selectItem itemLabel="C" itemValue="C" />
+                                <p:ajax event="change" update="@this" />
+                            </p:selectOneMenu>
+                            <h:outputText value="Order Type" />
+                            <p:selectOneMenu value="#{workshopOrdersView.selectedOrders.orderTyp}" style="width: 180px;"
+                                             filter="true" filterMatchMode="startsWith" >
+                                <f:selectItems value="#{workshopOrdersView.orderTypList}" />
+                            </p:selectOneMenu>
+                            <h:outputText value="Issue Date:" />
+                            <p:inputText value="#{workshopOrdersView.selectedOrders.formatedStatusDate}" readonly="true" />
+                            <h:outputText value="Workshop Close Date:" />
+                            <p:inputText value="#{workshopOrdersView.selectedOrders.formatedWrkshpCloseDate}" readonly="true" />
+                            <h:outputText value="Order Close Date:" />
+                            <p:inputText value="#{workshopOrdersView.selectedOrders.formatedOrderCloseDate}" readonly="true">
+                                <p:ajax event="change" update="@this" />
+                            </p:inputText>
+                        </p:panelGrid>
+                    </p:outputPanel>
+                </p:dialog>
+
+            </h:form>
+        </h:body>
+    </f:view>
+</html>
+

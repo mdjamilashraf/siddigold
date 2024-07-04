@@ -1,0 +1,116 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui" dir="ltr">
+    <f:view rendered="true" contentType="text/html">
+        <h:head>
+            <f:facet name="first">
+                <meta http-equiv="X-UA-Compatible" content="EmulateIE8" />
+                <meta content='text/html; charset=UTF-8' http-equiv="Content-Type"/>
+                <title>Title</title>
+            </f:facet>
+        </h:head>
+        <h:body dir="ltr">
+            <h:outputStylesheet name="css/default.css" />
+            <h:form id="dfltMltngFrm">
+                <p:layout fullPage="true">
+                    <p:layoutUnit position="north" styleClass="ui-layout-north" style="border: 0px;" size="80">
+                        <ui:include  src="/secured/globalResources/headerMenu.xhtml"  />
+                    </p:layoutUnit>
+                    <p:layoutUnit position="center" style="border: 0px;">
+                        <p:messages id="globalMsgs" showDetail="true"  closable="true"/>
+                        <p:panel header="#{msg.ITEM_MST}" id="itemMstPnl">
+                            <p:outputPanel id="addDfltMelting">
+                                <h:panelGrid columns="5" cellpadding="1" styleClass="jsf-panel-grid-style">
+                                    <h:outputText value="#{msg.MELTING}"/>
+                                    <p:inputText id="melting" required="true" autocomplete="off" requiredMessage="#{msg.REQUIRED_MESSAGE}" readonly="false" value="#{defaultMeltingView.dfltMelting.meltingPer}">
+                                        <p:message  for="melting" display="text" /> 
+                                    </p:inputText>
+
+                                    <h:outputText value="#{msg.STAMP}"/>
+                                    <p:inputText id="stamp" required="true" autocomplete="off" requiredMessage="#{msg.REQUIRED_MESSAGE}" readonly="false" 
+                                                 value="#{defaultMeltingView.dfltMelting.stamp}">
+                                        <p:message  for="stamp" display="text" /> 
+                                    </p:inputText>
+
+                                    <p:panelGrid>
+                                        <p:commandButton id="addDfltMlt" ajax="false" icon="ui-icon-star" iconPos="right" value="Save"
+                                                         action="#{defaultMeltingView.addMeltingStamp()}"
+                                                         update="globalMsgs :meltStmpPnl"   />  
+                                        <p:commandButton id="reset" ajax="false" immediate="true" icon="ui-icon-cancel" iconPos="right" value="Reset" 
+                                                         update="globalMsgs"  action="#{defaultMeltingView.resetData()}"  style="float:right;"/> 
+                                        <p:defaultCommand target="addDfltMlt" /> 
+                                    </p:panelGrid>
+                                </h:panelGrid>  
+                            </p:outputPanel>
+                        </p:panel>
+                        <p:panel>
+                            <p:outputPanel id="meltStmpPnl" rendered="#{defaultMeltingView.showList}">
+                                <p:dataTable id="dfltMlt" scrollable="true" scrollHeight="600" 
+                                             value="#{defaultMeltingView.meltingList}" 
+                                             var="melt" rowIndexVar="rowIndex"
+                                             widgetVar="dfltMltTable"
+                                             emptyMessage="No Record found with given criteria">
+
+                                    <p:column style="width: 20px;" >
+                                        <f:facet name="header">
+                                            <h:outputText value="#{msg.SR_NO}" />
+                                        </f:facet>
+                                        <div align="center">
+                                            <h:outputText  value="#{rowIndex+1}" />
+                                        </div>
+                                    </p:column>
+                                    <p:column   style="width:100px">
+                                        <f:facet name="header">
+                                            <h:outputText value="Melting%" />
+                                        </f:facet>
+                                        <div align="center">
+                                            <h:outputText value="#{melt.meltingPer}" />
+                                        </div>
+                                    </p:column>
+                                    <p:column   style="width:100px">
+                                        <f:facet name="header">
+                                            <h:outputText value="Stamp" />
+                                        </f:facet>
+                                        <div align="center">
+                                            <h:outputText value="#{melt.stamp}" />
+                                        </div>
+                                    </p:column>
+                                    <p:column style="width:100px" headerText="Action">
+                                        <div align="center">
+                                            <p:commandButton id="editMltng" ajax="true"
+                                                             style="margin-right:20px;" immediate="true"
+                                                             action="#{defaultMeltingView.editDfltMltng()}" title="Edit"
+                                                             icon="ui-icon-pencil" update="dfltMltngFrm:addDfltMelting" process="@this" 
+                                                             oncomplete="PF('dfltMltTable').clearFilters()">
+                                                <f:setPropertyActionListener value="#{melt}"
+                                                                             target="#{defaultMeltingView.selectedDfltMltng}">
+                                                </f:setPropertyActionListener>
+                                            </p:commandButton>
+                                            <p:commandButton id="deleteDfltMltng" style="margin-right:20px;" 
+                                                             update="dfltMltngFrm:addDfltMelting" immediate="true"
+                                                             action="#{defaultMeltingView.deleteDfltMltng()}" title="Delete"
+                                                             icon="ui-icon-close">
+                                                <p:confirm header="Confirmation" message="Are you sure?"
+                                                           icon="ui-icon-triangle-1-n" />
+                                                <f:setPropertyActionListener value="#{melt}"
+                                                                             target="#{defaultMeltingView.selectedDfltMltng}"></f:setPropertyActionListener>
+                                            </p:commandButton>
+                                        </div>
+                                    </p:column>
+                                </p:dataTable>
+                            </p:outputPanel>
+                        </p:panel>
+                        <p:blockUI block="itemMstPnl" trigger="addDfltMlt"  />
+                    </p:layoutUnit>
+                    <p:layoutUnit position="south" size="50">
+
+                    </p:layoutUnit>
+                </p:layout>  
+            </h:form>
+        </h:body>
+    </f:view>
+</html>

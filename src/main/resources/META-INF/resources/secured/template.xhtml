@@ -1,0 +1,48 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui" dir="ltr">
+    <f:view rendered="true" contentType="text/html">
+        <h:head>
+            <f:facet name="first">
+                <meta http-equiv="X-UA-Compatible" content="EmulateIE8" />
+                <meta content='text/html; charset=UTF-8' http-equiv="Content-Type"/>
+                <title>Default Melting</title>
+            </f:facet>
+        </h:head>
+        <h:body dir="ltr">
+            <h:outputStylesheet name="css/default.css" />
+            <h:form>
+                <p:layout fullPage="true">
+                    <p:layoutUnit position="north" styleClass="ui-layout-north" style="border: 0px;" size="80">
+                        <ui:include  src="/secured/globalResources/headerMenu.xhtml"  />
+                    </p:layoutUnit>
+                    <p:layoutUnit position="center" style="border: 0px;">
+                        <p:messages id="globalMsgs" showDetail="true"  />
+                        <p:panel header="#{msg.DEFAULT_MELTING}" id="itemMstPnl">  
+                            <h:panelGrid columns="2" cellpadding="1" styleClass="jsf-panel-grid-style">
+                                <h:outputText value="Melting"></h:outputText>
+                                <p:inputText id="melting" autocomplete="off" />
+                            </h:panelGrid>                                   
+                            <f:facet name="footer">  
+                                <p:commandButton id="addItem" ajax="false" icon="ui-icon-star" iconPos="right" value="Add" 
+                                                 update="globalMsgs"   />  
+                                <p:commandButton id="reset" ajax="false" immediate="true" icon="ui-icon-cancel" iconPos="right" value="Reset" 
+                                                 update="globalMsgs"    />  
+                                
+                                <p:defaultCommand target="addItem" /> 
+                            </f:facet>
+                        </p:panel>
+                        <p:blockUI block="itemMstPnl" trigger="addItem"  />
+                    </p:layoutUnit>
+                    <p:layoutUnit position="south" size="50">
+
+                    </p:layoutUnit>
+                </p:layout>  
+            </h:form>
+        </h:body>
+    </f:view>
+</html>

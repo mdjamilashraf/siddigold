@@ -1,0 +1,141 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui" dir="ltr">
+    <f:view rendered="true">
+        <h:head>
+            <f:facet name="first">
+                <meta http-equiv="X-UA-Compatible" content="EmulateIE8" />
+                <meta content='text/html; charset=UTF-8' http-equiv="Content-Type"/>
+                <title>Admin Users</title>
+            </f:facet>
+        </h:head>
+        <h:body dir="ltr">
+            <h:outputStylesheet name="css/default.css" />
+            <h:form id="adminFrm">
+                <p:layout fullPage="true">
+                    <p:layoutUnit position="north" styleClass="ui-layout-north" style="border: 0px;" size="50">
+                        <ui:include  src="/secured/globalResources/headerMenu.xhtml"  />
+                    </p:layoutUnit>
+                    <p:layoutUnit position="center" style="border: 0px;">
+                        <p:messages id="globalMsgs" showDetail="true"  closable="true"/>
+                        <p:panel header="#{msg.USER_DETAILS}" id="userDetailpanel">  
+                            <p:outputPanel id="addAdminPnl">
+                                <h:panelGrid columns="4" cellpadding="3" styleClass="jsf-panel-grid-style">
+                                    <h:outputText value="#{msg.LOGIN_ID}:*" />
+                                    <p:inputText id="user_code" readonly="#{addAdminUserView.readOnlyFld}" required="true" requiredMessage="#{msg.REQUIRED_MESSAGE}" maxlength="25"
+                                                 validatorMessage="#{msg.IS_NOT_VALID}" value="#{addAdminUserView.adminUsersVO.userCode}"
+                                                 autocomplete="off">
+                                        <p:ajax event="change" update="globalMsgs userName user_active" listener="#{addAdminUserView.searchByCode()}" rendered="#{addAdminUserView.showSearchDtls}"/>
+                                        <f:validateLength minimum="4" maximum="25"/>
+                                        <p:message  for="user_code" display="text" /> 
+                                        <p:keyFilter mask="alphanum" />
+                                    </p:inputText>
+                                    <h:outputText value="#{msg.USER_NAME}:*" />
+                                    <p:inputText id="userName"  required="true" autocomplete="off" requiredMessage="#{msg.REQUIRED_MESSAGE}" 
+                                                 value="#{addAdminUserView.adminUsersVO.userName}">
+                                        <p:message  for="userName" display="text" /> 
+                                    </p:inputText>
+                                    <h:outputText value="#{msg.PASSWORD}:*" rendered="#{addAdminUserView.pswdReqFld}"/>
+                                    <p:password id="user_password" required="true" rendered="#{addAdminUserView.pswdReqFld}" requiredMessage="#{msg.REQUIRED_MESSAGE}" autocomplete="off" maxlength="20"
+                                                inline="true" promptLabel="#{msg.PASSWORD_PROMPT_LABEL}" match="reenter_user_password"  value="#{addAdminUserView.adminUsersVO.password}">
+                                        <f:validateLength minimum="4" maximum="20"/>
+                                        <p:message id="user_password_msg"  for="user_password" display="text" /> 
+                                    </p:password>
+
+                                    <h:outputText value="#{msg.RE_ENTER_PASSWORD}:*" rendered="#{addAdminUserView.pswdReqFld}"/>
+                                    <p:password id="reenter_user_password" required="true" rendered="#{addAdminUserView.pswdReqFld}" requiredMessage="#{msg.REQUIRED_MESSAGE}" autocomplete="off" maxlength="20"
+                                                inline="true" promptLabel="#{msg.PASSWORD_PROMPT_LABEL}" value="#{addAdminUserView.adminUsersVO.password}">
+                                        <f:validateLength minimum="4" maximum="20" />
+                                        <p:message  for="reenter_user_password" display="text" /> 
+                                    </p:password>
+
+                                    <h:outputText value="#{msg.ACTIVE}:" />
+                                    <p:selectOneRadio id="user_active" value="#{addAdminUserView.adminUsersVO.inactiveFlg}">  
+                                        <f:selectItem itemLabel="#{msg.YES}" itemValue="0" />  
+                                        <f:selectItem itemLabel="#{msg.NO}" itemValue="1" />  
+                                    </p:selectOneRadio>
+                                    <f:facet name="footer">  
+                                        <p:commandButton id="saveUser" ajax="false" icon="ui-icon-star" iconPos="right" value="Save" update="globalMsgs"  action="#{addAdminUserView.addAdminUser()}"  />  
+                                        <p:commandButton rendered="false" id="search" ajax="false" icon="ui-icon-search" iconPos="right" value="Search" update="adminFrm:addAdminPnl" action="#{addAdminUserView.searchByCode()}" immediate="true" />  
+                                        <p:commandButton id="reset" ajax="false" immediate="true" icon="ui-icon-cancel" iconPos="right" value="Reset" 
+                                                         update="globalMsgs"  action="#{addAdminUserView.resetData()}"  />  
+                                        <p:defaultCommand target="saveUser" /> 
+                                    </f:facet>
+                                </h:panelGrid>
+                            </p:outputPanel>
+                        </p:panel>
+                        <p:panel>
+                            <p:outputPanel id="admnDtlPnl" rendered="#{addAdminUserView.showList}">
+                                <p:dataTable id="adminDtl" scrollable="true" scrollHeight="300"
+                                             value="#{addAdminUserView.admins}"  
+                                             var="adm" rowIndexVar="rowIndex"
+                                             widgetVar="adminDtl"
+                                             emptyMessage="No Record found with given criteria">
+
+                                    <p:column style="width: 20px;">
+                                        <f:facet name="header">
+                                            <h:outputText value="#{msg.SR_NO}" />
+                                        </f:facet>
+                                        <div align="center">
+                                            <h:outputText  value="#{rowIndex+1}" />
+                                        </div>
+                                    </p:column>
+                                    <p:column   style="width:100px" sortBy="#{adm.userCode}">
+                                        <f:facet name="header">
+                                            <h:outputText value="#{msg.USER_CODE}" />
+                                        </f:facet>
+                                        <div align="center">
+                                            <h:outputText value="#{adm.userCode}" />
+                                        </div>
+                                    </p:column>
+                                    <p:column   style="width:100px" sortBy="#{adm.userName}">
+                                        <f:facet name="header">
+                                            <h:outputText value="#{msg.USER_NAME}" />
+                                        </f:facet>
+                                        <div align="center">
+                                            <h:outputText value="#{adm.userName}" />
+                                        </div>
+                                    </p:column>
+                                    <p:column style="width:100px">
+                                        <f:facet name="header">
+                                            <h:outputText value="#{msg.ACTIVE}" />
+                                        </f:facet>
+                                        <div align="center">
+                                            <h:outputText value="#{adm.status}" style="color: darkgreen"  />
+                                        </div>
+                                    </p:column>
+                                    <p:column style="width:100px" headerText="Action">
+                                        <div align="center">
+                                            <p:commandButton id="editAdmn" ajax="true"
+                                                             style="margin-right:20px;" immediate="true"
+                                                             action="#{addAdminUserView.editAdminUser()}" title="Edit"
+                                                             icon="ui-icon-pencil" update="adminFrm:addAdminPnl"
+                                                             process="@this" >
+                                                <f:setPropertyActionListener value="#{adm}"
+                                                                             target="#{addAdminUserView.selectedAdmin}" />
+                                            </p:commandButton>
+                                            <p:commandButton id="deleteAdmn" style="margin-right:20px;" 
+                                                             update="adminFrm:addAdminPnl" immediate="true"
+                                                             action="#{addAdminUserView.deleteAdmnDtl()}" title="Delete"
+                                                             icon="ui-icon-close">
+                                                <p:confirm header="Confirmation" message="Are you sure?"
+                                                           icon="ui-icon-triangle-1-n" />
+                                                <f:setPropertyActionListener value="#{adm}"
+                                                                             target="#{addAdminUserView.selectedAdmin}" />
+                                            </p:commandButton>
+                                        </div>
+                                    </p:column>
+                                </p:dataTable>
+                            </p:outputPanel>
+                        </p:panel>
+                        <p:blockUI block="userDetailpanel" trigger="saveUser"  />
+                    </p:layoutUnit>
+                </p:layout>  
+            </h:form>
+        </h:body>
+    </f:view>
+</html>

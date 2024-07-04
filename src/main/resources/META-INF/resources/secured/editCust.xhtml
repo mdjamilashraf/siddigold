@@ -1,0 +1,156 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui" dir="ltr">
+    <f:view rendered="true" contentType="text/html">
+        <h:head>
+            <f:facet name="first">
+                <meta http-equiv="X-UA-Compatible" content="EmulateIE8" />
+                <meta content='text/html; charset=UTF-8' http-equiv="Content-Type"/>
+                <title>Dashboard</title>
+            </f:facet>
+        </h:head>
+        <h:body dir="ltr">
+            <h:outputStylesheet name="css/default.css" />
+            <h:form>
+                <p:layout fullPage="true">
+                    <p:layoutUnit position="north" styleClass="ui-layout-north" style="border: 0px;" size="80">
+                        <ui:include  src="/secured/globalResources/headerMenu.xhtml"  />
+                    </p:layoutUnit>
+                    <p:layoutUnit position="center" style="border: 0px;">
+                        <p:messages id="globalMsgs" showDetail="true"  />
+                        <p:panel  id="customerDetailpanel" rendered="true">  
+                            <h:panelGrid columns="2">
+                                <p:panel id="panel22" header="Customer Details" style="height: 400px;">
+                                    <h:panelGrid columns="4" cellpadding="3" styleClass="jsf-panel-grid-style">
+                                        <h:outputText value="#{msg.CUSTOMER_CODE}:*" />
+                                        <p:inputText value="#{addCustomerView.custDetails.custCode}" readonly="true"/>
+
+                                        <h:outputText value="#{msg.CUSTOMER_NAME}:*" />
+                                        <p:inputText id="Customer_Name" required="true" requiredMessage="#{msg.REQUIRED_MESSAGE}" maxlength="25"
+                                                     validatorMessage="#{msg.IS_NOT_VALID}" value="#{addCustomerView.custDetails.custName}" >
+                                            <p:ajax update="globalMsgs"/>
+                                        </p:inputText>
+
+                                        <h:outputText value="#{msg.PASSWORD}:*" rendered="false"/>
+                                        <p:password id="user_password" required="true" requiredMessage="#{msg.REQUIRED_MESSAGE}" autocomplete="off" maxlength="20"
+                                                    inline="true"  promptLabel="#{msg.PASSWORD_PROMPT_LABEL}" match="reenter_user_password"  value="#{addCustomerView.custDetails.password}" rendered="false">
+                                            <f:validateLength minimum="4" maximum="20"/>
+                                            <p:message id="user_password_msg"  for="user_password" display="text" /> 
+                                        </p:password>
+
+                                        <h:outputText value="#{msg.RE_ENTER_PASSWORD}:*" rendered="false"/>
+                                        <p:password id="reenter_user_password" required="true" requiredMessage="#{msg.REQUIRED_MESSAGE}" autocomplete="off" maxlength="20"
+                                                    inline="true" promptLabel="#{msg.PASSWORD_PROMPT_LABEL}" value="#{addCustomerView.custDetails.password}" rendered="false">
+                                            <f:validateLength minimum="4" maximum="20" />
+                                            <p:message  for="reenter_user_password" display="text" /> 
+                                        </p:password>
+                                        <h:outputText value="#{msg.ACTIVE}:" />
+                                        <p:selectOneRadio id="user_active" value="#{addCustomerView.custDetails.userActive}">  
+                                            <f:selectItem itemLabel="#{msg.YES}" itemValue="1" />  
+                                            <f:selectItem itemLabel="#{msg.NO}" itemValue="0" />  
+                                        </p:selectOneRadio>
+                                        <h:outputText value="" />
+                                        <h:outputText value="" />
+                                        <h:outputText value="#{msg.ADDRESS}:" />
+                                        <p:inputTextarea rows="2" value="#{addCustomerView.custDetails.custAddr}"/>
+
+                                        <h:outputText value="#{msg.STATE}:" />
+                                        <p:selectOneMenu id="stateId" value="#{addCustomerView.custDetails.stateId}">  
+                                            <f:selectItem itemLabel="Select One" itemValue="" />  
+                                            <f:selectItem itemLabel="Karnataka" itemValue="1" />  
+                                        </p:selectOneMenu>
+                                        <h:outputText value="#{msg.CITY}:" />
+                                        <p:selectOneMenu id="cityId" value="#{addCustomerView.custDetails.cityId}">  
+                                            <f:selectItem itemLabel="Select One" itemValue="" />  
+                                            <f:selectItem itemLabel="Bangalore" itemValue="1" />
+                                            <f:selectItem itemLabel="Mysore" itemValue="1" />
+                                        </p:selectOneMenu>
+                                        <h:outputText value="#{msg.PINCODE}:" />
+                                        <p:inputText id="pincode" requiredMessage="#{msg.REQUIRED_MESSAGE}" 
+                                                     value="#{addCustomerView.custDetails.pinCode}">
+                                        </p:inputText>
+
+                                        <h:outputText value="#{msg.PHONE}:" />
+                                        <p:inputText id="phone" requiredMessage="#{msg.REQUIRED_MESSAGE}" 
+                                                     value="#{addCustomerView.custDetails.custPhone}">
+
+                                        </p:inputText>
+                                        <h:outputText value="#{msg.MOBILE}:" />
+                                        <p:inputText id="mobile"  requiredMessage="#{msg.REQUIRED_MESSAGE}" 
+                                                     value="#{addCustomerView.custDetails.custMobile}">
+                                        </p:inputText>
+                                        <h:outputText value="#{msg.TINNO}:" />
+                                        <p:inputText id="tinNo" requiredMessage="#{msg.REQUIRED_MESSAGE}" 
+                                                     value="#{addCustomerView.custDetails.tinNo}">
+                                        </p:inputText>
+                                        <h:outputText value="#{msg.CSTNO}:" />
+                                        <p:inputText id="cstNo" requiredMessage="#{msg.REQUIRED_MESSAGE}" 
+                                                     value="#{addCustomerView.custDetails.cstNo}"/>
+                                        <h:outputText value="#{msg.EMAIL}:" />
+                                        <p:inputText id="email" requiredMessage="#{msg.REQUIRED_MESSAGE}" 
+                                                     value="#{addCustomerView.custDetails.custEmail}"/>
+                                        <h:outputText value="" />
+                                        <h:outputText value="" />
+                                        <h:outputText value="Default Stamp" />
+                                        <p:selectBooleanCheckbox id="defaultCust" />
+                                    </h:panelGrid>
+                                </p:panel>
+                                <p:panel id="panel222" header="Melting" style="height: 400px;">
+                                    <p:dataTable var="melt" value="#{addCustomerView.meltingList}" style="width: 50%;"
+                                                 editable="true" editMode="row" editingRow="true" >
+                                        <p:column headerText="SL No." style="width:10px; text-align: center">
+                                            <p:cellEditor>
+                                                <f:facet name="output">
+                                                    <h:outputText value="#{melt.index}" />
+                                                </f:facet>
+                                                <f:facet name="input">
+                                                    <h:outputText value="#{melt.index}" /></f:facet>
+                                            </p:cellEditor>
+                                        </p:column>
+                                        <p:column headerText="Melting%" style="width:50px; text-align: center">
+                                            <p:cellEditor>
+                                                <f:facet name="output">
+                                                    <h:outputText value="#{melt.meltPer}" />
+                                                </f:facet>
+                                                <f:facet name="input">
+                                                    <p:inputText autocomplete="off" value="#{melt.meltPer}" style="width: 95%" >
+                                                        <p:ajax event="change" update="@this" />
+                                                    </p:inputText>
+                                                </f:facet>
+                                            </p:cellEditor>
+                                        </p:column>
+                                        <p:column headerText="Stamp" style="width:50px; text-align: center">
+                                            <p:cellEditor>
+                                                <f:facet name="output">
+                                                    <h:outputText value="#{melt.stamp}" />
+                                                </f:facet>
+                                                <f:facet name="input">
+                                                    <p:inputText autocomplete="off" value="#{melt.stamp}" style="width: 95%">
+                                                        <p:ajax event="change" update="@this" />
+                                                    </p:inputText>
+                                                </f:facet>
+                                            </p:cellEditor>
+                                        </p:column>
+                                    </p:dataTable>
+                                </p:panel>
+                            </h:panelGrid>                           
+                            <f:facet name="footer">  
+                                <p:commandButton id="updateCustomer"  ajax="false" icon="ui-icon-star" iconPos="right" value="Update" update="globalMsgs"  action="#{addCustomerView.addCustomerUser()}" />  
+                                <p:defaultCommand target="updateCustomer" /> 
+                            </f:facet>
+                        </p:panel>
+
+                        <p:blockUI block="customerDetailpanel" trigger="updateCustomer"  />
+                    </p:layoutUnit>
+                    <p:layoutUnit position="south" size="50">
+
+                    </p:layoutUnit>
+                </p:layout>  
+            </h:form>
+        </h:body>
+    </f:view>
+</html>

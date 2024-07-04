@@ -1,0 +1,113 @@
+<ui:composition 
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui"  >
+    <script>
+         function poponloadCompanySite()
+                {
+                    window.open('http://www.yemensoft.com','_blank');
+                }
+                
+               function poponloadEnglish()
+                {
+                    var link= window.location.protocol+"//"+window.location.host+"/"+ "rem"+"/" +"sec" +"/"+"receiveReport?lang=en";
+
+                    testwindow = window.open(link, "mywindow", "location=1,status=1,scrollbars=1,width=800,height=500");
+                    testwindow.moveTo(50, 50);
+                }
+    </script>
+    <p:toolbar rendered="#{AutenticateUserManagedBean.language == 'en'}">
+        <p:toolbarGroup align="left">
+         <p:menuButton  value="#{res.REMITTANCE}">
+            <p:menuitem value="#{res.HOME}" immediate="true" icon="ui-icon-home" ajax="false" action="home"/>
+            <p:menuitem value="#{res.SEND}" immediate="true" ajax="false" action="send" icon="ui-icon-arrowthick-1-ne" rendered="#{UserPrivManagedBean.is_send}" />
+            <p:menuitem value="#{res.RECEIVE}" immediate="true" ajax="false" action="receive" icon="ui-icon-arrowthick-1-sw" rendered="#{UserPrivManagedBean.is_receive}"  />
+            <p:menuitem value="#{res.EDIT}" immediate="true" ajax="false" action="rename" icon="ui-icon-shuffle" rendered="#{UserPrivManagedBean.is_rename}" />
+            <p:menuitem value="#{res.SEARCH}" immediate="true" ajax="false" action="search" icon="ui-icon-search"  rendered="#{UserPrivManagedBean.is_search}"/>
+            <p:menuitem value="#{res.REPORT}" immediate="true" ajax="false" action="sndRcvReport" icon="ui-icon-pin-s"  rendered="#{UserPrivManagedBean.snd_rcv_report}"/>
+            <p:menuitem value="#{res.EXPORT_DATA}"  immediate="true" ajax="false" action="dataExport" icon="ui-icon-transferthick-e-w"  rendered="#{UserPrivManagedBean.data_export}"/>
+            <p:menuitem value="#{res.CHANGE_PASSWORD}" immediate="true" ajax="false" action="chgPass" icon="ui-icon-key"  />
+            <p:menuitem  value="#{res.AGENT_DETAILS}" immediate="true" ajax="false" action="agtDtls" icon="ui-icon-comment"  />
+            <p:menuitem value="#{res.USER_HISTORY}" immediate="true" ajax="false" action="userLogs" icon="ui-icon-clock" rendered="#{UserPrivManagedBean.user_history}" />
+            <p:separator />
+            <p:menuitem value="#{res.SIGN_OUT}" immediate="true"  icon="ui-icon-close" ajax="false" action="#{AutenticateUserManagedBean.doSignOut()}"/>
+        </p:menuButton>
+            <p:separator  rendered="#{SystemSettingBean.allowMTN eq 1}"/>
+            <p:menuButton  value="#{res.BILL_PAYMENT}" rendered="#{SystemSettingBean.allowMTN eq 1}">
+                <p:menuitem  value="#{res.MOBILE_BILL_PAYMENT}" immediate="true" ajax="false" action="mobileBill" icon="ui-icon-mobile" rendered="#{SystemSettingBean.allowMTN eq 1}" />  
+            </p:menuButton><!--
+-->            <p:separator />
+            <p:commandButton  immediate="true" ajax="false" action="accStmt" icon="ui-icon-pin-s" value="#{res.STATEMENT}"  /> 
+            
+            <p:menuButton  value="#{res.IMPORT_OR_EXPORT}">
+                <p:menuitem  value="#{res.PROJECT_IMPORT}" immediate="true" ajax="false" action="prjImport" icon="ui-icon-arrowthickstop-1-s"  />  
+                <p:menuitem  value="#{res.PENDING_APPROVAL}" immediate="true" ajax="false" action="prjApprv" icon="ui-icon-arrowthickstop-1-s"  />  
+            </p:menuButton>
+        <p:menuButton  value="#{res.HELP}">
+             <p:menuitem value="#{res.AGENTS_LIST}" immediate="true" ajax="false" action="allAgents" icon="ui-icon-person" />
+           </p:menuButton >
+          
+            <p:separator />
+          
+        <p:commandButton  value="#{res.SIGN_OUT}" immediate="true" ajax="false" action="#{AutenticateUserManagedBean.doSignOut()}" icon="ui-icon-close" />
+        
+        
+        </p:toolbarGroup>
+         <p:toolbarGroup align="right">
+           
+            <h:graphicImage height="10px" library="images" title="#{res.YEMEN_SOFT}" style="padding: 10px"  value="/globalResources/images/icons/companyLogo.png" onclick="poponloadCompanySite()" />
+        </p:toolbarGroup>
+        <p:toolbarGroup align="left" style="margin-left:320px; vertical-align: middle; padding: 5px" >
+            
+
+<p:lightBox iframe="true" width="900px" height="380px"  >  
+                <h:outputLink style= "text-decoration: none;" value="excRate.xhtml" title="#{res.EXCHANGE_RATE}">  
+                    <h:outputText value="#{res.EXCHANGE_RATE}" /> 
+            </h:outputLink>  
+           </p:lightBox>
+        </p:toolbarGroup>
+
+
+
+
+    </p:toolbar>
+    
+     <p:toolbar rendered="#{AutenticateUserManagedBean.language == 'ar'}">
+        <p:toolbarGroup align="right">
+         <p:menuButton  value="#{res.REMITTANCE}">
+             <p:menuitem value="#{res.HOME}"  immediate="true" icon="ui-icon-home" ajax="false" action="home"/>
+            <p:menuitem value="#{res.SEND}" immediate="true" ajax="false" action="send"  icon="ui-icon-arrowthick-1-ne" rendered="#{UserPrivManagedBean.is_send}" />
+            <p:menuitem value="#{res.RECEIVE}" immediate="true" ajax="false" action="receive" icon="ui-icon-arrowthick-1-sw" rendered="#{UserPrivManagedBean.is_receive}"  />
+            <p:menuitem value="#{res.EDIT}" immediate="true" ajax="false" action="rename" icon="ui-icon-shuffle" rendered="#{UserPrivManagedBean.is_rename}" />
+            <p:menuitem value="#{res.SEARCH}" immediate="true" ajax="false" action="search" icon="ui-icon-search"  rendered="#{UserPrivManagedBean.is_search}"/>
+            <p:menuitem value="#{res.REPORT}" immediate="true" ajax="false" action="sndRcvReport" icon="ui-icon-pin-s"  rendered="#{UserPrivManagedBean.snd_rcv_report}"/>
+            <p:menuitem value="#{res.CHANGE_PASSWORD}" immediate="true" ajax="false" action="chgPass" icon="ui-icon-key"  />
+            <p:menuitem  value="#{res.AGENT_DETAILS}" immediate="true" ajax="false" action="agtDtls" icon="ui-icon-comment"  />
+            <p:menuitem value="#{res.USER_HISTORY}" immediate="true" ajax="false" action="userLogs" icon="ui-icon-clock" rendered="#{UserPrivManagedBean.user_history}" />
+            <p:separator />
+            <p:menuitem value="#{res.SIGN_OUT}" immediate="true"  icon="ui-icon-close" ajax="false" action="#{AutenticateUserManagedBean.doSignOut()}"/>
+        </p:menuButton>
+             <p:separator  rendered="#{SystemSettingBean.allowMTN eq 1}"/>
+             <p:menuButton  value="#{res.BILL_PAYMENT}" rendered="#{SystemSettingBean.allowMTN eq 1}">
+                 <p:menuitem  value="#{res.MOBILE_BILL_PAYMENT}" immediate="true" ajax="false" action="mobileBill" icon="ui-icon-mobile" rendered="#{SystemSettingBean.allowMTN eq 1}" />  
+            </p:menuButton>
+              <p:separator />
+            <p:commandButton  immediate="true" ajax="false" action="accStmt" icon="ui-icon-pin-s" value="#{res.STATEMENT}"  /> 
+             <p:separator />
+        <p:commandButton  value="#{res.SIGN_OUT}" immediate="true" ajax="false" action="#{AutenticateUserManagedBean.doSignOut()}" icon="ui-icon-close" />
+        </p:toolbarGroup>
+        <p:toolbarGroup align="left">
+            <h:graphicImage height="10px" title="#{res.YEMEN_SOFT}" library="images" style="padding: 10px"  value="/globalResources/images/icons/companyLogo.png"  onclick="poponloadCompanySite()"/>
+        </p:toolbarGroup>
+           <p:toolbarGroup align="left" style="margin-left:370px; vertical-align: middle; padding: 5px" >
+               <p:lightBox width="900px" height="360px" iframe="true" >  
+                <h:outputLink style= "text-decoration: none;" value="excRate.xhtml" title="#{res.EXCHANGE_RATE}">  
+                    <h:outputText value="#{res.EXCHANGE_RATE}" /> 
+            </h:outputLink>  
+           </p:lightBox>
+        </p:toolbarGroup>
+    </p:toolbar>
+
+</ui:composition>

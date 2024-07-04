@@ -1,0 +1,116 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui" dir="ltr">
+    <f:view rendered="true" contentType="text/html">
+        <h:head>
+            <f:facet name="first">
+                <meta http-equiv="X-UA-Compatible" content="EmulateIE8" />
+                <meta content='text/html; charset=UTF-8' http-equiv="Content-Type"/>
+                <title>Dashboard</title>
+            </f:facet>
+        </h:head>
+        <h:body dir="ltr">
+            <h:outputStylesheet name="css/default.css" />
+            <h:form>
+                <p:layout fullPage="true">
+                    <p:layoutUnit position="north" styleClass="ui-layout-north" style="border: 0px;" size="80">
+                        <ui:include  src="/secured/globalResources/headerMenu.xhtml"  />
+                    </p:layoutUnit>
+                    <p:layoutUnit position="center" style="border: 0px;">
+                        <p:messages id="globalMsgs" showDetail="true"  />
+                        <p:panel id="workshopDetailspanel" rendered="true">
+                            <h:panelGrid columns="2">
+                                <p:panel id="panel22" header="WorkShop Details" style="height: 400px;">
+                                    <h:panelGrid columns="4" cellpadding="3" styleClass="jsf-panel-grid-style">
+
+                                        <h:outputText value="#{msg.WORKSHOP_CODE}:*" />
+                                        <p:inputText value="#{addWorkshopUserView.wrkDetails.wrkshpCode}" readonly="true"/>
+
+                                        <h:outputText value="#{msg.WORKSHOP_NAME}:*" />
+                                        <p:inputText id="wrkshp_Name" required="true" requiredMessage="#{msg.REQUIRED_MESSAGE}" maxlength="25"
+                                                     validatorMessage="#{msg.IS_NOT_VALID}" value="#{addWorkshopUserView.wrkDetails.wrkshpName}" >
+                                            <p:ajax update="globalMsgs"/>
+                                        </p:inputText>
+
+                                        <h:outputText value="#{msg.PASSWORD}:*" rendered="false" />
+                                        <p:password id="user_password" required="true" requiredMessage="#{msg.REQUIRED_MESSAGE}" autocomplete="off"
+                                                    inline="true"  promptLabel="#{msg.PASSWORD_PROMPT_LABEL}"    match="reenter_user_password"  value="#{addWorkshopUserView.wrkshpVO.password}" rendered="false" >
+                                            <p:message id="user_password_msg"  for="user_password" display="text" /> 
+                                        </p:password>
+
+                                        <h:outputText value="#{msg.RE_ENTER_PASSWORD}:*" rendered="false" />
+                                        <p:password id="reenter_user_password" required="true" requiredMessage="#{msg.REQUIRED_MESSAGE}" autocomplete="off" 
+                                                    inline="true" promptLabel="#{msg.PASSWORD_PROMPT_LABEL}"     value="#{addWorkshopUserView.wrkshpVO.password}" rendered="false">
+                                            <p:message  for="reenter_user_password" display="text" /> 
+                                        </p:password>
+
+                                        <h:outputText value="#{msg.USER_ACTIVE}:" />
+                                        <p:selectOneRadio id="user_active" value="#{addWorkshopUserView.wrkDetails.userActive}">  
+                                            <f:selectItem itemLabel="#{msg.YES}" itemValue="1" />  
+                                            <f:selectItem itemLabel="#{msg.NO}" itemValue="0" />  
+                                        </p:selectOneRadio> 
+                                        <h:outputText value="" />
+                                        <h:outputText value="" />
+                                        <h:outputText value="#{msg.ADDRESS}:" />
+                                        <p:inputTextarea rows="2" value="#{addWorkshopUserView.wrkDetails.wrkshpAddr}"/>
+
+                                        <h:outputText value="#{msg.STATE}:" />
+                                        <p:selectOneMenu id="stateId" value="#{addWorkshopUserView.wrkDetails.stateId}">  
+                                            <f:selectItem itemLabel="Select One" itemValue="" />  
+                                            <f:selectItem itemLabel="Karnataka" itemValue="1" />  
+                                        </p:selectOneMenu>
+                                        <h:outputText value="#{msg.CITY}:" />
+                                        <p:selectOneMenu id="cityId" value="#{addWorkshopUserView.wrkDetails.cityId}">  
+                                            <f:selectItem itemLabel="Select One" itemValue="" />  
+                                            <f:selectItem itemLabel="Bangalore" itemValue="1" />
+                                            <f:selectItem itemLabel="Mysore" itemValue="1" />
+                                        </p:selectOneMenu>
+                                        <h:outputText value="#{msg.PINCODE}:" />
+                                        <p:inputText id="pincode" requiredMessage="#{msg.REQUIRED_MESSAGE}" 
+                                                     value="#{addWorkshopUserView.wrkDetails.pinCode}">
+                                        </p:inputText>
+
+                                        <h:outputText value="#{msg.PHONE}:" />
+                                        <p:inputText id="phone" requiredMessage="#{msg.REQUIRED_MESSAGE}" 
+                                                     value="#{addWorkshopUserView.wrkDetails.wrkshpPhone}">
+
+                                        </p:inputText>
+                                        <h:outputText value="#{msg.MOBILE}:" />
+                                        <p:inputText id="mobile"  requiredMessage="#{msg.REQUIRED_MESSAGE}" 
+                                                     value="#{addWorkshopUserView.wrkDetails.wrkshpMobile}">
+                                        </p:inputText>
+                                        <h:outputText value="#{msg.TINNO}:" />
+                                        <p:inputText id="tinNo" requiredMessage="#{msg.REQUIRED_MESSAGE}" 
+                                                     value="#{addWorkshopUserView.wrkDetails.tinNo}">
+                                        </p:inputText>
+                                        <h:outputText value="#{msg.CSTNO}:" />
+                                        <p:inputText id="cstNo" requiredMessage="#{msg.REQUIRED_MESSAGE}" 
+                                                     value="#{addWorkshopUserView.wrkDetails.cstNo}"/>
+                                        <h:outputText value="#{msg.EMAIL}:" />
+                                        <p:inputText id="email" requiredMessage="#{msg.REQUIRED_MESSAGE}" 
+                                                     value="#{addWorkshopUserView.wrkDetails.wrkshpEmail}"/>
+                                        <h:outputText value="" />
+                                        <h:outputText value="" />
+                                    </h:panelGrid>
+                                </p:panel>
+                            </h:panelGrid> 
+                            <f:facet name="footer">  
+                                <p:commandButton id="updateWorkShop" ajax="false" icon="ui-icon-star" iconPos="right" value="Update" update="globalMsgs"  action="#{addWorkshopUserView.addUserWorkshop()}" onsuccess="location.reload();"  />  
+                                <p:defaultCommand target="updateWorkShop" /> 
+                            </f:facet>
+                        </p:panel>  
+
+                        <p:blockUI block="workshopDetailspanel" trigger="updateWorkShop"  />
+                    </p:layoutUnit>
+                    <p:layoutUnit position="south" size="50">
+
+                    </p:layoutUnit>
+                </p:layout>  
+            </h:form>
+        </h:body>
+    </f:view>
+</html>

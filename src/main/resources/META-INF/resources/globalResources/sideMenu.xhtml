@@ -1,0 +1,46 @@
+<ui:composition 
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui"  >
+  
+    
+  
+    <p:outputLabel styleClass="ui-toolbar ui-widget ui-widget-header ui-corner-all ui-helper-clearfix"   value="#{AutenticateUserManagedBean.agentFullName}" />  
+  
+    <p:menu>
+        
+        <p:menuitem styleClass="ui-side-Menu" value="#{res.HOME}" immediate="true" icon="ui-icon-home" ajax="false" action="home"/>
+             <p:separator />
+            <p:menuitem styleClass="ui-side-Menu" value="#{res.SEND}" immediate="true" ajax="false" action="send"  icon="ui-icon-arrowthick-1-ne" rendered="#{UserPrivManagedBean.is_send}" />
+             <p:separator />
+            <p:menuitem styleClass="ui-side-Menu" value="#{res.RECEIVE}" immediate="true" ajax="false" action="receive" icon="ui-icon-arrowthick-1-sw" rendered="#{UserPrivManagedBean.is_receive}"  />
+             <p:separator />
+             <p:menuitem  value="#{res.MOBILE_BILL_PAYMENT}"  immediate="true" ajax="false" action="mobileBill" icon="ui-icon-mobile" rendered="#{SystemSettingBean.allowMTN eq 1}" />  
+             <p:separator />
+             
+            <p:menuitem styleClass="ui-side-Menu" value="#{res.EDIT}" immediate="true" ajax="false" action="rename" icon="ui-icon-shuffle" rendered="#{UserPrivManagedBean.is_rename}" />
+             <p:separator />
+             <p:menuitem styleClass="ui-side-Menu" value="#{res.CANCEL_REMITTANCE}" immediate="true" icon="ui-icon-arrowreturnthick-1-n" ajax="false" action="cancelRemittence" rendered="#{UserPrivManagedBean.is_cancel}"/>
+             <p:separator />
+            
+             <p:menuitem styleClass="ui-side-Menu" value="#{res.SEARCH}" immediate="true" ajax="false" action="search" icon="ui-icon-search"  rendered="#{UserPrivManagedBean.is_search}"/>
+             <p:separator />
+            <p:menuitem styleClass="ui-side-Menu" value="#{res.REPORT}" immediate="true" ajax="false" action="sndRcvReport" icon="ui-icon-pin-s"  rendered="#{UserPrivManagedBean.snd_rcv_report}"/>
+             <p:separator />
+            <p:menuitem styleClass="ui-side-Menu" value="#{res.STATEMENT}" immediate="true" ajax="false" action="accStmt" icon="ui-icon-pin-s"  />
+             <p:separator />
+            <p:menuitem styleClass="ui-side-Menu" value="#{res.CHANGE_PASSWORD}" immediate="true" ajax="false" action="chgPass" icon="ui-icon-key"  />
+             <p:separator />
+             <p:menuitem styleClass="ui-side-Menu" value="#{res.AGENT_DETAILS}" immediate="true" ajax="false" action="agtDtls" icon="ui-icon-comment"  />
+             <p:separator />
+             <p:menuitem styleClass="ui-side-Menu" value="#{res.AGENT_BALANCE_AUTH}" immediate="true" ajax="false" action="agtBalanceAuth" icon="ui-icon-comment"  />
+             <p:separator />
+            <p:menuitem styleClass="ui-side-Menu" value="#{res.SIGN_OUT}" immediate="true"  icon="ui-icon-close" ajax="false" action="#{AutenticateUserManagedBean.doSignOut()}"/>
+    </p:menu>
+        
+        
+        
+  
+</ui:composition>

@@ -1,0 +1,283 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui" dir="ltr">
+    <f:view rendered="true">
+        <h:head>
+            <f:facet name="first">
+                <meta http-equiv="X-UA-Compatible" content="EmulateIE8" />
+                <meta content='text/html; charset=UTF-8' http-equiv="Content-Type"/>
+                <title>Order</title>
+            </f:facet>
+            <style>
+                /*                .ui-row-editor .ui-row-editor-pencil {
+                                    margin-left:8px;
+                                }*/
+            </style>
+        </h:head>
+        <h:body dir="ltr">
+            <h:outputStylesheet name="css/default.css" />
+            <h:form id="orderFrm">
+                <p:layout fullPage="true">
+                    <p:layoutUnit position="north" style="border: 0px;" size="50">
+                        <ui:include  src="/secured/globalResources/headerMenu.xhtml"  />
+                    </p:layoutUnit>
+                    <p:layoutUnit position="center" style="border: 0px;">
+                        <p:messages id="msgs" showDetail="true" closable="true" />
+                        <p:panel id="Customer">
+                            <h:panelGrid columns="6">
+                                <p:outputLabel value="Customer:*" rendered="#{salesOrderView.userGrp eq 1}"/>
+                                <p:selectOneMenu value="#{salesOrderView.custCode}" id="custCode" 
+                                                 required="true" requiredMessage="Required Field"   
+                                                 filter="true" filterMatchMode="startsWith" rendered="#{salesOrderView.userGrp eq 1}">
+                                    <f:selectItems value="#{salesOrderView.custList}" />
+                                    <p:ajax event="change" />
+                                </p:selectOneMenu>
+                                <p:outputLabel value="Welcome.." rendered="#{salesOrderView.userGrp eq 3}"/>
+                                <p:inputText value="#{salesOrderView.userNm}" readonly="true" rendered="#{salesOrderView.userGrp eq 3}"/>
+                                <p:outputLabel value="Order No" />
+                                <p:inputText value="#{orderNoBean.orderNo}" readonly="true"/>
+                                <p:outputLabel value="Order Date" />
+                                <p:inputText value="#{salesOrderView.orderDate}" readonly="true"/>
+                            </h:panelGrid>
+                        </p:panel>
+                        <p:panel id="ordrPnl">
+                            <p:remoteCommand name="rmtCommand" update="totalWeight"/>
+                            <p:dataTable id="order" widgetVar="order" var="order" value="#{salesOrderView.orders}" 
+                                         editable="true" editMode="row" editingRow="true" 
+                                         style="margin-bottom:10px; height: 450px;" paginator="true" rows="10" 
+                                         paginatorPosition="bottom" selection="#{salesOrderView.selectedRow}" 
+                                         selectionMode="single" rowKey="#{order.srlNo}">
+                                <p:column headerText="#" style="width:5px; text-align: center">
+                                    <p:cellEditor>
+                                        <f:facet name="output"><h:outputText value="#{order.srlNo}" /></f:facet>
+                                        <f:facet name="input"><h:outputText value="#{order.srlNo}" /></f:facet>
+                                    </p:cellEditor>
+                                </p:column>
+
+                                <p:column headerText="Code" style="width: 20px;" rendered="#{salesOrderView.userGrp eq 1}">
+                                    <p:cellEditor>
+                                        <f:facet name="output"><h:outputText value="#{order.itemCode}" style="width: 20px"/></f:facet>
+                                        <f:facet name="input">
+                                            <p:autoComplete id="acSimple" value="#{order.itemCode}"  style="width: 20px;"
+                                                            minQueryLength="2" completeMethod="#{salesOrderView.completeText}">
+                                                <p:ajax event="itemSelect" update="itemName" listener="#{salesOrderView.onSelectItemCode(order)}"  
+                                                        oncomplete="$(function(){PrimeFaces.focus('orderFrm:order:#{order.srlNo-1}:weight');});" />
+                                            </p:autoComplete>
+                                        </f:facet>
+                                    </p:cellEditor>
+                                </p:column>
+                                <p:column headerText="Name" style="width: 75px;" rendered="#{salesOrderView.userGrp eq 1}">
+                                    <p:cellEditor>
+                                        <f:facet name="output"><h:outputText value="#{order.itemName}" /></f:facet>
+                                        <f:facet name="input">
+                                            <p:inputText id="itemName" value="#{order.itemName}" style="width: 95%" />
+                                        </f:facet>
+                                    </p:cellEditor>
+                                </p:column>
+                                <p:column headerText="Code" style="width: 50px;" rendered="#{salesOrderView.userGrp eq 3}">
+                                    <p:cellEditor>
+                                        <f:facet name="output"><h:outputText value="#{order.itemName}" style="width: 50px;"/></f:facet>
+                                        <f:facet name="input">
+                                            <p:selectOneMenu id="itmNm" value="#{order.itemCode}"  style="width: 80%;" filter="true" filterMatchMode="startsWith">
+                                                <f:selectItems value="#{salesOrderView.itemList}" />
+                                                <p:ajax event="itemSelect" update="@this" listener="#{salesOrderView.onSelectItemCode(order)}"/>
+                                            </p:selectOneMenu>
+                                        </f:facet>
+                                    </p:cellEditor>
+                                </p:column>
+                                <p:column headerText="Wt(gms)" style="width: 20px;">
+                                    <p:cellEditor>
+                                        <f:facet name="output"><h:outputText value="#{order.weight}" /></f:facet>
+                                        <f:facet name="input">
+                                            <p:inputText id="weight" value="#{order.weight}" style="width:95%;" >
+                                                <p:keyFilter mask="num" />
+                                                <p:ajax event="change" update="qty" 
+                                                        listener="#{salesOrderView.assingDefaultQty(order)}"/>
+                                            </p:inputText>
+                                        </f:facet>
+                                    </p:cellEditor>
+                                </p:column>
+                                <p:column headerText="Size" style="width:20px">
+                                    <p:cellEditor>
+                                        <f:facet name="output"><h:outputText value="#{order.itemSize}" /></f:facet>
+                                        <f:facet name="input"><p:inputText value="#{order.itemSize}" style="width:100%" >
+                                                <p:ajax event="change" update="@this" />
+                                            </p:inputText>
+                                        </f:facet>
+                                    </p:cellEditor>
+                                </p:column>
+
+                                <p:column headerText="Qty" style="width:20px">
+                                    <p:cellEditor>
+                                        <f:facet name="output"><h:outputText value="#{order.qty}" /></f:facet>
+                                        <f:facet name="input">
+                                            <p:inputText id="qty" value="#{order.qty}" style="width:100%">
+                                                <p:keyFilter mask="num" />
+                                                <p:ajax event="change" update="orderFrm:totalWeight" 
+                                                        listener="#{salesOrderView.calculateWeight(order, order.qty)}"
+                                                        oncomplete="rmtCommand()"/>
+                                                <p:ajax event="blur" update="orderFrm:totalWeight" 
+                                                        listener="#{salesOrderView.calculateWeight(order, order.qty)}"
+                                                        oncomplete="rmtCommand()"/>
+                                            </p:inputText>
+                                        </f:facet>
+                                    </p:cellEditor>
+                                </p:column>
+                                <p:column headerText="Melt%" style="width:20px">
+                                    <p:cellEditor>
+                                        <f:facet name="output"><h:outputText value="#{order.meltPer}" /></f:facet>
+                                        <f:facet name="input">
+                                            <p:inputText value="#{order.meltPer}" style="width:91%">
+                                                <p:keyFilter mask="num" />
+                                                <p:ajax event="change" listener="#{salesOrderView.onChangeMeltingPer(order)}" update="stamp"
+                                                        oncomplete="$(function(){PrimeFaces.focus('orderFrm:order:#{order.srlNo-1}:hook');});" />
+                                            </p:inputText>
+                                        </f:facet>
+                                    </p:cellEditor>
+                                </p:column>
+                                <p:column headerText="Stamp" style="width:25px">
+                                    <p:cellEditor>
+                                        <f:facet name="output"><h:outputText value="#{order.stamp}" /></f:facet>
+                                        <f:facet name="input">
+                                            <p:inputText id="stamp" value="#{order.stamp}" style="width:95%" readonly="false">
+                                                <p:ajax event="change" update="@this" />
+                                            </p:inputText>
+                                        </f:facet>
+                                    </p:cellEditor>
+                                </p:column>
+                                <p:column headerText="Hook" style="width:50px">
+                                    <p:cellEditor>
+                                        <f:facet name="output"><h:outputText value="#{order.hook}" /></f:facet>
+                                        <f:facet name="input"><p:inputText id="hook" value="#{order.hook}" style="width:100%">
+                                                <p:ajax event="change" update="@this" />
+                                            </p:inputText></f:facet>
+                                    </p:cellEditor>
+                                </p:column>
+
+
+                                <p:column headerText="Design Sample" style="width:50px">
+                                    <p:cellEditor>
+                                        <f:facet name="output"><h:outputText value="#{order.designSample}" /></f:facet>
+                                        <f:facet name="input"><p:inputText value="#{order.designSample}" style="width:100%">
+                                                <p:ajax event="change" update="@this" /></p:inputText></f:facet>
+                                    </p:cellEditor>
+                                </p:column>
+                                <p:column headerText="Size Sample" style="width:50px">
+                                    <p:cellEditor>
+                                        <f:facet name="output"><h:outputText value="#{order.sizeSample}" /></f:facet>
+                                        <f:facet name="input"><p:inputText value="#{order.sizeSample}" style="width:100%">
+                                                <p:ajax event="change" update="@this" /></p:inputText></f:facet>
+                                    </p:cellEditor>
+                                </p:column>
+
+                                <p:column headerText="Customer RefNo" style="width:25px">
+                                    <p:cellEditor>
+                                        <f:facet name="output"><h:outputText value="#{order.refNo}" /></f:facet>
+                                        <f:facet name="input"><p:inputText value="#{order.refNo}" style="width:100%">
+                                                <p:ajax event="change" update="@this" /></p:inputText></f:facet>
+                                    </p:cellEditor>
+                                </p:column>
+                                <p:column headerText="Remarks" style="width:75px">
+                                    <p:cellEditor>
+                                        <f:facet name="output"><h:outputText value="#{order.remark}" /></f:facet>
+                                        <f:facet name="input"><p:inputText value="#{order.remark}" style="width:95%">
+                                                <p:ajax event="change" update="@this" /></p:inputText></f:facet>
+                                    </p:cellEditor>
+                                </p:column>
+                                <p:column headerText="Days" style="width:20px">
+                                    <p:cellEditor>
+                                        <f:facet name="output"><h:outputText value="#{order.days}" /></f:facet>
+                                        <f:facet name="input">
+                                            <p:inputText value="#{order.days}" style="width:95%" >
+                                                <p:keyFilter mask="num" />
+                                                <p:ajax event="change" listener="#{salesOrderView.onChangeDays(order)}" 
+                                                        update="dueDate" oncomplete="$(function(){PrimeFaces.focus('orderFrm:order:#{order.srlNo-1}:workshop');});"/>
+                                            </p:inputText>
+                                        </f:facet>
+                                    </p:cellEditor>
+                                </p:column>
+                                <p:column headerText="Due Date" style="width:30px">
+                                    <p:cellEditor>
+                                        <f:facet name="output"><h:outputText value="#{order.formatedDueDate}" /></f:facet>
+                                        <f:facet name="input"><p:inputText id="dueDate" value="#{order.formatedDueDate}" 
+                                                                           readonly="true"  style="width:100%" /></f:facet>
+                                    </p:cellEditor>
+                                </p:column>
+                                <p:column headerText="Workshop" style="width:50px" rendered="#{salesOrderView.userGrp eq 1}">
+                                    <p:cellEditor>
+                                        <f:facet name="output"><h:outputText value="#{order.workshop}" /></f:facet>
+                                        <f:facet name="input">
+                                            <p:selectOneMenu id="workshop" value="#{order.workshop}" style="width: 80%;">
+                                                <f:selectItems value="#{salesOrderView.workshopList}"/>
+                                                <p:ajax event="itemSelect" update="@this" />
+                                            </p:selectOneMenu>
+                                        </f:facet>
+                                    </p:cellEditor>
+                                </p:column>
+                                <p:column headerText="Sample" style="width: 20px; text-align: center; align-content: center" rendered="#{salesOrderView.userGrp eq 1}">
+                                    <p:cellEditor>
+                                        <f:facet name="output">
+                                            <p:selectBooleanCheckbox value="#{order.rcvSample}" style="width:100%" />
+                                        </f:facet>
+                                        <f:facet name="input">
+                                            <p:selectBooleanCheckbox value="#{order.rcvSample}" style="width:100%">
+                                                <p:ajax event="change" update="@this" /></p:selectBooleanCheckbox>
+                                        </f:facet>
+                                    </p:cellEditor>
+                                </p:column>
+                                <p:column headerText="Fixrate" style="width: 25px; text-align: center;" rendered="#{salesOrderView.userGrp eq 1}">
+                                    <p:cellEditor>
+                                        <f:facet name="output"><h:outputText value="#{order.fixRate}" /></f:facet>
+                                        <f:facet name="input">
+                                            <p:selectOneMenu id="fixRate" value="#{order.fixRate}" editable="true" 
+                                                             style="width: 45px;" >
+                                                <f:selectItem itemLabel="R" itemValue="R0" />
+                                                <f:selectItem itemLabel="C" itemValue="C0" />
+                                                <p:ajax event="change" update="@this" />
+                                            </p:selectOneMenu>
+                                        </f:facet>
+                                    </p:cellEditor>
+                                </p:column>
+                                <p:column headerText="Type" style="width:30px" rendered="#{salesOrderView.userGrp eq 1}">
+                                    <p:cellEditor>
+                                        <f:facet name="output"><h:outputText value="#{order.orderTyp}" /></f:facet>
+                                        <f:facet name="input">
+                                            <p:selectOneMenu id="orderTyp" value="#{order.orderTyp}" editable="true" 
+                                                             style="width: 50px;" >
+                                                <f:selectItem itemLabel="Order" itemValue="1" />
+                                                <f:selectItem itemLabel="Repair" itemValue="2" />
+                                                <p:ajax event="change" update="@this" />
+                                            </p:selectOneMenu>
+                                        </f:facet>
+                                    </p:cellEditor>
+                                </p:column>
+                            </p:dataTable>
+                            <p:contextMenu for="order">
+                                <p:menuitem value="Clear Row" update="order" icon="pi pi-times" action="#{salesOrderView.clearOrderRow()}"/>
+                            </p:contextMenu>
+                            <p:separator />
+                            <div align="left">
+                                <h:outputText value="Total Wt." />
+                                <p:inputText readonly="true" id="totalWeight" value="#{salesOrderView.totalWeight}" style="width: 50px;" />
+
+                                <p:commandButton id="saveOrder" value="Submit" action="#{salesOrderView.saveOrder(orderNoBean.orderNo)}" ajax="false" 
+                                                 update="msgs"/>
+                                <p:commandButton value="Reset" action="#{salesOrderView.reset()}" ajax="false" />
+                                <p:defaultCommand target="saveOrder" />
+                            </div>
+
+
+                        </p:panel>
+
+                    </p:layoutUnit>
+
+                </p:layout>  
+            </h:form>
+        </h:body>
+    </f:view>
+</html>
+

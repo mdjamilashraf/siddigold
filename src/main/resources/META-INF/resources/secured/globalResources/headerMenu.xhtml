@@ -1,0 +1,29 @@
+<ui:composition 
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui">
+    <p:menubar>
+        <p:menuitem value="Dasboard" action="home" immediate="true" ajax="false" icon="ui-icon-home"/>
+        <p:submenu label="Setup" rendered="#{userPrivView.userGrp lt 3}">
+            <p:menuitem value="#{msg.MANAGE_ADMIN}"  action="addAdminUser" immediate="true" ajax="false" rendered="#{userPrivView.privAddAdminUser==1}"/>
+            <p:menuitem value="#{msg.MANAGE_WORKSHOP}"  action="addWorkshopUser" immediate="true" ajax="false" rendered="#{userPrivView.privAddWorkshopUser==1}"/>
+            <p:menuitem value="#{msg.MANAGE_CUSTOMER}"  action="addCust" immediate="true" ajax="false" rendered="#{userPrivView.privAddCustomer==1}"/>
+            <p:menuitem value="#{msg.ITEM_MASTER}"  action="addItem" immediate="true" ajax="false" rendered="#{userPrivView.privItemMst==1}"/>
+            <p:menuitem value="#{msg.DEFAULT_MELTING}"  action="dfltMelting" immediate="true" ajax="false" rendered="#{userPrivView.privDfltMelting==1}"/>
+            <p:menuitem value="#{msg.MANAGE_WORKER}"  action="manageWorker" immediate="true" ajax="false" rendered="#{userPrivView.privWorkerMgmnt==1}"/>
+            <p:menuitem value="#{msg.RESET_ORDERS}"  action="resetOrders" immediate="true" ajax="false" rendered="#{userPrivView.privResetOrders==1}"/>
+        </p:submenu>
+
+        <p:menuitem value="#{msg.ORDER_ENTRY}"  action="salesOrder" immediate="true" ajax="false" rendered="#{userPrivView.privEntryOrdr==1}" icon="ui-icon-star"/>
+        <p:menuitem value="#{msg.CHECK_ORDER_STATUS}" action="manageOrder" immediate="true" ajax="false" rendered="#{userPrivView.privOrdrStatus==1}" icon="ui-icon-search"/>
+        <p:menuitem value="#{msg.WORKSHOP_ORDER}" action="workshopOrder" immediate="true" ajax="false" rendered="#{userPrivView.privWorkshopOrdr==1}" icon="ui-icon-search"/>
+        <p:menuitem value="#{msg.RESET_PASSWORD}" action="resetPswrd" immediate="true" ajax="false" rendered="false" />
+        <f:facet name="options">
+            <p:outputLabel value="#{AuthenticationManageBean.userName}" /><p:outputLabel value=" " />
+            <p:commandButton value="Sign-Out" action="#{AuthenticationManageBean.signout()}" 
+                             immediate="true" ajax="false" icon="pi pi-home" />
+        </f:facet>
+    </p:menubar>
+</ui:composition>

@@ -1,0 +1,24 @@
+<ui:composition 
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui" 
+    xmlns:ys="/WEB-INF/tlds/marquee">
+<!-- <p:poll interval="300"   
+         listener="#{LOVManagedBean.initNewsData()}" update="newsSwitch" />
+
+ <p:imageSwitch    style="margin-left: auto; margin-right: auto;"   effect="#{SystemSettingBean.newsItemEffect}" id="newsSwitch"  slideshowSpeed="6000"  >
+        <ui:repeat value="#{LOVManagedBean.newsData}" var="data">  
+            <h:outputText value="#{data}" escape="false"/>
+        </ui:repeat> 
+    </p:imageSwitch>-->
+ 
+<f:verbatim   >
+   
+   <marquee BGColor="yellow" direction="right" style="white-space: pre"  onmouseover="this.stop();" onmouseout="this.start();" scrollamount="5" ><FONT SIZE="4" FACE="Helvetica"  COLOR="black"> #{LOVManagedBean.newsData}</FONT> </marquee>
+   
+</f:verbatim>
+
+</ui:composition>
+   

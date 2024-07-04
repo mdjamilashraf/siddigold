@@ -1,0 +1,215 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui" dir="ltr">
+    <f:view rendered="true" contentType="text/html">
+        <h:head>
+            <f:facet name="first">
+                <meta http-equiv="X-UA-Compatible" content="EmulateIE8" />
+                <meta content='text/html; charset=UTF-8' http-equiv="Content-Type"/>
+                <title>Dashboard</title>
+            </f:facet>
+        </h:head>
+        <h:body dir="ltr">
+            <h:outputStylesheet name="css/default.css" />
+            <h:form id="workshopFrm">
+                <p:layout fullPage="true">
+                    <p:layoutUnit position="north" styleClass="ui-layout-north" style="border: 0px;" size="80">
+                        <ui:include  src="/secured/globalResources/headerMenu.xhtml"  />
+                    </p:layoutUnit>
+                    <p:layoutUnit position="center" style="border: 0px;">
+                        <p:messages id="globalMsgs" showDetail="true"  />
+                        <p:panel id="userDetailpanel" rendered="true">
+                            <h:panelGrid columns="2">
+                                <p:panel id="panel22" header="Workshop Details" style="height: 500px;">
+                                    <p:outputPanel id="addwrkshpPnl">
+                                        <h:panelGrid columns="4" cellpadding="3" styleClass="jsf-panel-grid-style">
+                                            <h:outputText value="#{msg.WORKSHOP_CODE}:*" />
+                                            <p:inputText id="wrkshpCode" readonly="#{addWorkshopUserView.readOnlyFld}" required="true" autocomplete="off" requiredMessage="#{msg.REQUIRED_MESSAGE}" maxlength="25"
+                                                         validatorMessage="#{msg.IS_NOT_VALID}" value="#{addWorkshopUserView.wrkshpVO.wrkshpCode}" >
+                                                <p:ajax event="change" update="globalMsgs wrkshpName address stateId cityId pincode phone mobile tinNo cstNo email user_active showCust"
+                                                        listener="#{addWorkshopUserView.searchByCode()}" rendered="#{addAdminUserView.showSearchDtls}"/>
+                                                <p:keyFilter mask="alphanum" />
+                                            </p:inputText>
+
+                                            <h:outputText value="#{msg.WORKSHOP_NAME}:*" />
+                                            <p:inputText id="wrkshpName" required="true" autocomplete="off" requiredMessage="#{msg.REQUIRED_MESSAGE}" maxlength="25"
+                                                         validatorMessage="#{msg.IS_NOT_VALID}" value="#{addWorkshopUserView.wrkshpVO.wrkshpName}" >
+                                                <p:ajax update="globalMsgs"/>
+                                            </p:inputText>
+
+                                            <h:outputText value="#{msg.PASSWORD}:*" rendered="#{addWorkshopUserView.pswdReqFld}"/>
+                                            <p:password id="user_password" required="true" rendered="#{addWorkshopUserView.pswdReqFld}" requiredMessage="#{msg.REQUIRED_MESSAGE}" autocomplete="off" maxlength="20"
+                                                        inline="true"  promptLabel="#{msg.PASSWORD_PROMPT_LABEL}" match="reenter_user_password"  value="#{addWorkshopUserView.wrkshpVO.password}" >
+                                                <f:validateLength minimum="4" maximum="20"/>
+                                                <p:message id="user_password_msg"  for="user_password" display="text" /> 
+                                            </p:password>
+
+                                            <h:outputText value="#{msg.RE_ENTER_PASSWORD}:*" rendered="#{addWorkshopUserView.pswdReqFld}"/>
+                                            <p:password id="reenter_user_password" required="true" rendered="#{addWorkshopUserView.pswdReqFld}" requiredMessage="#{msg.REQUIRED_MESSAGE}" autocomplete="off" maxlength="20"
+                                                        inline="true" promptLabel="#{msg.PASSWORD_PROMPT_LABEL}" value="#{addWorkshopUserView.wrkshpVO.password}" >
+                                                <f:validateLength minimum="4" maximum="20"/>
+                                                <p:message  for="reenter_user_password" display="text" /> 
+                                            </p:password>
+
+                                            <h:outputText value="#{msg.USER_ACTIVE}:" />
+                                            <h:selectOneRadio id="user_active" value="#{addWorkshopUserView.wrkshpVO.inactiveFlg}">  
+                                                <f:selectItem itemLabel="#{msg.YES}" itemValue="0" />  
+                                                <f:selectItem itemLabel="#{msg.NO}" itemValue="1" />  
+                                            </h:selectOneRadio> 
+                                            <h:outputText value="" />
+                                            <h:outputText value="" />
+                                            <h:outputText value="#{msg.ADDRESS}:" />
+                                            <p:inputTextarea id="address" rows="2" value="#{addWorkshopUserView.wrkshpVO.wrkshpAddr}"/>
+
+                                            <h:outputText value="#{msg.STATE}:" />
+                                            <p:selectOneMenu id="stateId" value="#{addWorkshopUserView.wrkshpVO.stateId}">  
+                                                <f:selectItem itemLabel="Select One" itemValue="" />  
+                                                <f:selectItem itemLabel="Karnataka" itemValue="1" />  
+                                            </p:selectOneMenu>
+
+                                            <h:outputText value="#{msg.CITY}:" />
+                                            <p:selectOneMenu id="cityId" value="#{addWorkshopUserView.wrkshpVO.cityId}">  
+                                                <f:selectItem itemLabel="Select One" itemValue="" />  
+                                                <f:selectItem itemLabel="Bangalore" itemValue="1" />
+                                                <f:selectItem itemLabel="Mysore" itemValue="1" />
+                                            </p:selectOneMenu>
+                                            <h:outputText value="#{msg.PINCODE}:" />
+                                            <p:inputText id="pincode" requiredMessage="#{msg.REQUIRED_MESSAGE}" autocomplete="off" maxlength="6"
+                                                         value="#{addWorkshopUserView.wrkshpVO.pinCode}">
+                                            </p:inputText>
+
+                                            <h:outputText value="#{msg.PHONE}:" />
+                                            <p:inputText id="phone" requiredMessage="#{msg.REQUIRED_MESSAGE}" autocomplete="off" maxlength="11"
+                                                         value="#{addWorkshopUserView.wrkshpVO.wrkshpPhone}">
+
+                                            </p:inputText>
+                                            <h:outputText value="#{msg.MOBILE}:" />
+                                            <p:inputText id="mobile"  requiredMessage="#{msg.REQUIRED_MESSAGE}" autocomplete="off" maxlength="11"
+                                                         value="#{addWorkshopUserView.wrkshpVO.wrkshpMobile}">
+                                            </p:inputText>
+                                            <h:outputText value="#{msg.TINNO}:" />
+                                            <p:inputText id="tinNo" requiredMessage="#{msg.REQUIRED_MESSAGE}" autocomplete="off"
+                                                         value="#{addWorkshopUserView.wrkshpVO.tinNo}">
+                                            </p:inputText>
+                                            <h:outputText value="#{msg.CSTNO}:" />
+                                            <p:inputText id="cstNo" requiredMessage="#{msg.REQUIRED_MESSAGE}" autocomplete="off"
+                                                         value="#{addWorkshopUserView.wrkshpVO.cstNo}"/>
+                                            <h:outputText value="#{msg.EMAIL}:" />
+                                            <p:inputText id="email" requiredMessage="#{msg.REQUIRED_MESSAGE}" autocomplete="off"
+                                                         value="#{addWorkshopUserView.wrkshpVO.wrkshpEmail}"/>
+
+                                            <h:outputText value="#{msg.SHOW_CUSTOMER}" />
+                                            <p:selectBooleanCheckbox id="showCust" 
+                                                                     value="#{addWorkshopUserView.wrkshpVO.shwCustFlg}" />
+
+                                        </h:panelGrid>
+                                    </p:outputPanel>
+                                </p:panel>
+                                <p:panel header="WorkshopUser List" style="height: 500px;">
+                                    <p:outputPanel id="workshopDtlpnl" rendered="#{addWorkshopUserView.showList}" >
+                                        <p:dataTable id="workshopsDtl" scrollable="true" scrollHeight="275"
+                                                     value="#{addWorkshopUserView.workshopList}"  
+                                                     var="workshop" rowIndexVar="rowIndex" filteredValue="#{addWorkshopUserView.filteredWorkshop}"
+                                                     widgetVar="workshopTable"
+                                                     globalFilterFunction="#{addWorkshopUserView.globalFilterFunction}"
+                                                     emptyMessage="No Record found with given criteria">
+
+                                            <f:facet name="header">
+                                                <div align="right">
+                                                    <p:inputText id="globalFilter" autocomplete="off"
+                                                                 onkeyup="PF('workshopTable').filter()"                                                                                                 
+                                                                 style="width:10rem;text-align: center;"
+                                                                 placeholder="Enter keyword"/>
+                                                </div>
+                                            </f:facet> 
+
+                                            <p:column style="width: 30px;">
+                                                <f:facet name="header">
+                                                    <h:outputText value="#{msg.SR_NO}" />
+                                                </f:facet>
+                                                <div align="center">
+                                                    <h:outputText  value="#{rowIndex+1}" />
+                                                </div>
+                                            </p:column>
+                                            <p:column   style="width:100px" sortBy="#{workshop.wrkshpCode}">
+                                                <f:facet name="header">
+                                                    <h:outputText value="#{msg.WORKSHOP_CODE}" />
+                                                </f:facet>
+                                                <div align="center">
+                                                    <h:outputText value="#{workshop.wrkshpCode}" style="vertical-align: middle; margin-left: .5rem"/>
+                                                </div>
+                                            </p:column>
+                                            <p:column   style="width:100px" sortBy="#{workshop.wrkshpName}">
+                                                <f:facet name="header">
+                                                    <h:outputText value="#{msg.WORKSHOP_NAME}" />
+                                                </f:facet>
+                                                <div align="center">
+                                                    <h:outputText value="#{workshop.wrkshpName}" style="vertical-align: middle; margin-left: .5rem"/>
+                                                </div>
+                                            </p:column>
+                                            <p:column   style="width:100px">
+                                                <f:facet name="header">
+                                                    <h:outputText value="#{msg.CSTNO}" />
+                                                </f:facet>
+                                                <div align="center">
+                                                    <h:outputText value="#{workshop.cstNo}" style="vertical-align: middle; margin-left: .5rem"/>
+                                                </div>
+                                            </p:column>
+                                            <p:column   style="width:100px">
+                                                <f:facet name="header">
+                                                    <h:outputText value="#{msg.TINNO}" />
+                                                </f:facet>
+                                                <div align="center">
+                                                    <h:outputText value="#{workshop.tinNo}" style="vertical-align: middle; margin-left: .5rem"/>
+                                                </div>
+                                            </p:column>
+                                            <p:column style="width:100px" headerText="Action">
+                                                <div align="center">
+                                                    <p:commandButton id="editWorkShop" ajax="true"
+                                                                     style="margin-right:20px;" immediate="true"
+                                                                     action="#{addWorkshopUserView.editWorkShop()}" title="Edit"
+                                                                     icon="ui-icon-pencil" update="workshopFrm:addwrkshpPnl" process="@this" 
+                                                                     oncomplete="PF('workshopTable').clearFilters()">
+                                                        <f:setPropertyActionListener value="#{workshop}"
+                                                                                     target="#{addWorkshopUserView.selectedWorkshp}">
+                                                        </f:setPropertyActionListener>
+                                                    </p:commandButton>
+                                                    <p:commandButton id="deleteWorker" style="margin-right:20px;" 
+                                                                     update="workshopFrm:globalMsgs" immediate="true"
+                                                                     action="#{addWorkshopUserView.deleteWorkShop()}" title="Delete"
+                                                                     icon="ui-icon-close">
+                                                        <p:confirm header="Confirmation" message="Are you sure?"
+                                                                   icon="ui-icon-triangle-1-n" />
+                                                        <f:setPropertyActionListener value="#{workshop}"
+                                                                                     target="#{addWorkshopUserView.selectedWorkshp}"></f:setPropertyActionListener>
+                                                    </p:commandButton>
+                                                </div>
+                                            </p:column>
+                                        </p:dataTable>
+                                    </p:outputPanel>
+                                </p:panel>
+                            </h:panelGrid> 
+
+                            <f:facet name="footer">  
+                                <p:commandButton id="saveUser" ajax="false" icon="ui-icon-star" iconPos="right" value="Save" update="globalMsgs"  action="#{addWorkshopUserView.addUserWorkshop()}"  />  
+                                <p:commandButton rendered="false" id="search" ajax="false" icon="ui-icon-search" iconPos="right" value="Search" update="adminFrm:addAdminPnl" action="#{addWorkshopUserView.searchByCode()}" immediate="true" />  
+                                <p:commandButton id="reset" ajax="false" immediate="true" icon="ui-icon-cancel" iconPos="right" value="Reset" 
+                                                 update="globalMsgs"  action="#{addWorkshopUserView.resetData()}"  />  
+                                <p:defaultCommand target="saveUser" /> 
+                            </f:facet>
+                        </p:panel>  
+
+                        <p:blockUI block="userDetailpanel" trigger="saveUser"  />
+                    </p:layoutUnit>
+                    <!--                    <p:layoutUnit position="south" size="50">
+                    
+                                        </p:layoutUnit>-->
+                </p:layout>  
+            </h:form>
+        </h:body>
+    </f:view>
+</html>

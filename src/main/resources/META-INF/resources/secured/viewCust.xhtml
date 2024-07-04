@@ -1,0 +1,80 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui" dir="ltr">
+    <f:view rendered="true" contentType="text/html">
+        <h:head>
+            <f:facet name="first">
+                <meta http-equiv="X-UA-Compatible" content="EmulateIE8" />
+                <meta content='text/html; charset=UTF-8' http-equiv="Content-Type"/>
+                <title>Dashboard</title>
+            </f:facet>
+        </h:head>
+        <h:body dir="ltr">
+            <h:outputStylesheet name="css/default.css" />
+            <h:form>
+                <p:layout fullPage="true">
+                    <p:layoutUnit position="north" styleClass="ui-layout-north" style="border: 0px;" size="80">
+                        <ui:include  src="/secured/globalResources/headerMenu.xhtml"  />
+                    </p:layoutUnit>
+                    <p:layoutUnit position="center" style="border: 0px;">
+                        <p:messages id="globalMsgs" showDetail="true"  />
+                        <p:panel header="#{msg.SEARCH_CUSTOMER}" id="customerDetailspanel">
+                            <h:panelGrid columns="3">
+                                <p:outputLabel value="#{msg.CUSTOMER}:*" />
+                                <p:selectOneMenu id="custCode" value="#{manageCustomerView.custCode}">
+                                    <f:selectItems value="#{manageCustomerView.custList}" />
+                                </p:selectOneMenu>
+                                <p:commandButton ajax="false" value="Show"  update="customerDtlpanel"
+                                                 action="#{manageCustomerView.showCustomer()}" /> 
+                            </h:panelGrid>
+                        </p:panel>
+                        <p:outputPanel id="customerDtlpanel" rendered="#{manageCustomerView.showDataTable}" >
+                            <p:dataTable var="cust" value="#{manageCustomerView.custDetails}"
+                                         selection="#{manageCustomerView.selectedCust}" rowKey="#{cust.custCode}" style="width: 100%;">
+                                <p:column selectionMode="multiple" style="width:16px;text-align:center"/>
+                                <p:column headerText="Customer Code">
+                                    <h:commandLink immediate="true" action="editCust" >
+                                        <h:outputText value="#{cust.custCode}"/><!--    to click on customer code-->
+                                        <f:param name="paramCustCode"
+                                                 value="#{cust.custCode}"/>
+                                    </h:commandLink>
+
+                                </p:column>
+                                <p:column headerText="Name">
+                                    <h:outputText value="#{cust.custName}" />
+                                </p:column>
+                                <p:column headerText="Email">
+                                    <h:outputText value="#{cust.custEmail}" />
+                                </p:column>
+                                <p:column headerText="Phone">
+                                    <h:outputText value="#{cust.custPhone}" />
+                                </p:column>
+                                <p:column headerText="Pincode">
+                                    <h:outputText value="#{cust.pinCode}" />
+                                </p:column>
+                                <p:column headerText="TINNo">
+                                    <h:outputText value="#{cust.tinNo}" />
+                                </p:column>
+                                <p:column headerText="CSTNo">
+                                    <h:outputText value="#{cust.cstNo}" />
+                                </p:column>
+                                <f:facet name="footer">
+                                    <p:commandButton  update="customerDtlpanel" icon="pi pi-delete" value="Delete" ajax="false" action="#{manageCustomerView.deleteCust()}"/>
+                                </f:facet>
+                            </p:dataTable>
+
+                        </p:outputPanel>
+                    </p:layoutUnit>
+
+                    <p:layoutUnit position="south" size="50">
+
+                    </p:layoutUnit>
+                </p:layout>  
+            </h:form>
+        </h:body>
+    </f:view>
+</html>

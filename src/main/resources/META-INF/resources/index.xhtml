@@ -1,0 +1,62 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui" dir="LTR"  >
+   
+    <f:view contentType="text/html" rendered="true">
+        <h:head>
+            <f:facet name="first">
+                <meta content='text/html; charset=UTF-8' http-equiv="Content-Type"/>
+                <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+                <meta http-equiv="Pragma" content="no-cache" />
+                <meta http-equiv="Expires" content="0" />
+                <title>#{msg.LOGIN}</title>
+            </f:facet>
+
+        </h:head>
+        <h:body dir="LTR" >
+            <h:outputStylesheet name="css/default.css" />
+            
+            <h:form>
+                <p:layout fullPage="true">
+                    <p:layoutUnit position="north" style="border: 0px; " size="50">
+                        <ui:include  src="/globalResources/header.xhtml"  />
+                    </p:layoutUnit>
+                    <p:layoutUnit position="center">
+                        
+                            <h:panelGrid width="30%"  columns="1" styleClass="centered"  >
+                                <p:spacer height="20px" />
+                                <marquee>
+                                    <b style="color: red">This is a gentle reminder regarding your Annual Maintenance Contract (AMC).
+                                    Kindly arrange for the payment at your earliest convenience to ensure 
+                                    uninterrupted access to our application.</b>
+                                </marquee>
+                                <p:spacer height="20px" />
+                                <p:panel  header="#{msg.LOGIN}">  
+                                    <p:messages id="messages" showDetail="true" /> 
+                                    <h:panelGrid id="grid" columns="3" cellpadding="3" styleClass="jsf-panel-grid-style" >
+                                        <h:outputText value="#{msg.USERNM}:*" />
+                                        <p:inputText id="userName" required="true" requiredMessage="#{res.REQUIRED_MESSAGE}" autocomplete="off"
+                                                     value="#{AuthenticationManageBean.userName}"/>
+                                        <p:message id="defaultMessage" for="userName" display="text"/>
+
+                                        <h:outputText value="#{msg.PSWRD}:*" />
+                                        <p:password id="password" required="true" feedback="false" inline="true" autocomplete="off" 
+                                                    requiredMessage="#{res.REQUIRED_MESSAGE}" value="#{AuthenticationManageBean.password}" />
+                                        <p:message id="textOnlyMessage" for="password" display="text" />
+                                    </h:panelGrid>
+                                    <f:facet name="footer">  
+                                        <p:commandButton id="login" icon="ui-icon-key" iconPos="right" ajax="false" value="Login" action="#{AuthenticationManageBean.login()}" />
+                                        <p:defaultCommand target="login" /> 
+                                    </f:facet>
+                                </p:panel>
+                            </h:panelGrid> 
+                    </p:layoutUnit>
+                </p:layout>
+            </h:form>
+        </h:body>
+    </f:view>
+</html>
+

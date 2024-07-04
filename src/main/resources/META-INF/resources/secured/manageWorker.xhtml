@@ -1,0 +1,111 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui" dir="ltr">
+    <f:view rendered="true">
+        <h:head>
+            <f:facet name="first">
+                <meta http-equiv="X-UA-Compatible" content="EmulateIE8" />
+                <meta content='text/html; charset=UTF-8' http-equiv="Content-Type"/>
+                <title>Dashboard</title>
+            </f:facet>
+        </h:head>
+        <h:body dir="ltr">
+            <h:outputStylesheet name="css/default.css" />
+            <h:form id="workrFrm">
+                <p:layout fullPage="true">
+                    <p:layoutUnit position="north" styleClass="ui-layout-north" style="border: 0px;" size="80">
+                        <ui:include  src="/secured/globalResources/headerMenu.xhtml"  />
+                    </p:layoutUnit>
+                    <p:layoutUnit position="center" style="border: 0px;">
+                        <p:messages id="globalMsgs" showDetail="true"  closable="true"/>
+                        <p:panel header="#{msg.WORKER_MASTER}" id="workerMstpanel">  
+                            <p:outputPanel id="addWrkrPnl">
+                                <h:panelGrid columns="5" cellpadding="3" styleClass="jsf-panel-grid-style">
+                                    <h:outputText value="#{msg.WORKER_NAME}:*" />
+                                    <p:inputText id="workerName" required="true" requiredMessage="#{msg.REQUIRED_MESSAGE}" autocomplete="off"
+                                                 value="#{manageWorkerView.worker.workerName}" >
+                                        <p:message  for="workerName" display="text" /> 
+                                    </p:inputText>
+                                    <h:outputText value="#{msg.MOBILE_NO}:*" />
+                                    <p:inputText id="workerMobile" required="true" requiredMessage="#{msg.REQUIRED_MESSAGE}" autocomplete="off"
+                                                 value="#{manageWorkerView.worker.workerMobile}">
+                                        <p:message  for="workerMobile" display="text" /> 
+                                    </p:inputText>
+                                    <p:commandButton id="addWorker" ajax="false" icon="ui-icon-star" iconPos="right" value="Add" 
+                                                     update="globalMsgs"  action="#{manageWorkerView.addWorker()}"  />  
+                                    <p:defaultCommand target="addWorker" /> 
+                                </h:panelGrid>
+                            </p:outputPanel>
+                        </p:panel>
+                        <p:panel>
+                            <p:outputPanel id="workerDtlPnl" rendered="#{manageWorkerView.showList}">
+                                <p:dataTable id="workersDtl" scrollable="true" scrollHeight="300"
+                                             value="#{manageWorkerView.workers}"  
+                                             var="workr" rowIndexVar="rowIndex"
+                                             widgetVar="workrTable"
+                                             emptyMessage="No Record found with given criteria">
+
+                                    <p:column style="width: 20px;">
+                                        <f:facet name="header">
+                                            <h:outputText value="#{msg.SR_NO}" />
+                                        </f:facet>
+                                        <div align="center">
+                                            <h:outputText  value="#{rowIndex+1}" />
+                                        </div>
+                                    </p:column>
+                                    <p:column   style="width:100px">
+                                        <f:facet name="header">
+                                            <h:outputText value="#{msg.NAME}" />
+                                        </f:facet>
+                                        <div align="center">
+                                            <h:outputText value="#{workr.workerName}" />
+                                        </div>
+                                    </p:column>
+                                    <p:column   style="width:100px">
+                                        <f:facet name="header">
+                                            <h:outputText value="#{msg.MOBILE_NO}" />
+                                        </f:facet>
+                                        <div align="center">
+                                            <h:outputText value="#{workr.workerMobile}" />
+                                        </div>
+                                    </p:column>
+                                    <p:column style="width:100px" headerText="Action">
+
+                                        <div align="center">
+                                            <p:commandButton id="editWorker" ajax="true"
+                                                             style="margin-right:20px;" immediate="true"
+                                                             action="#{manageWorkerView.editWorker()}" title="Edit"
+                                                             icon="ui-icon-pencil" update="workrFrm:addWrkrPnl" process="@this" 
+                                                             oncomplete="PF('workrTable').clearFilters()">
+                                                <f:setPropertyActionListener value="#{workr}"
+                                                                             target="#{manageWorkerView.selectedWorkr}">
+                                                </f:setPropertyActionListener>
+                                            </p:commandButton>
+                                            <p:commandButton id="deleteWorker" style="margin-right:20px;" 
+                                                             update="workrFrm:globalMsgs" immediate="true"
+                                                             action="#{manageWorkerView.deleteWorkerDtl()}" title="Delete"
+                                                             icon="ui-icon-close">
+                                                <p:confirm header="Confirmation" message="Are you sure?"
+                                                           icon="ui-icon-triangle-1-n" />
+                                                <f:setPropertyActionListener value="#{workr}"
+                                                                             target="#{manageWorkerView.selectedWorkr}"></f:setPropertyActionListener>
+                                            </p:commandButton>
+                                        </div>
+                                    </p:column>
+                                </p:dataTable>
+                            </p:outputPanel>
+                        </p:panel>
+                        <p:blockUI block="workerMstpanel" trigger="addWorker"  />
+                    </p:layoutUnit>
+                    <p:layoutUnit position="south" size="50">
+
+                    </p:layoutUnit>
+                </p:layout>  
+            </h:form>
+        </h:body>
+    </f:view>
+</html>
