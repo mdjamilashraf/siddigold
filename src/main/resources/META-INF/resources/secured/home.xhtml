@@ -35,11 +35,11 @@
                             <p:dashboard id="board" model="#{dashboardView.model}">
                                 <p:ajax event="reorder" listener="#{dashboardView.handleReorder}" update="msgs"/>
 
-                                <p:panel id="CustomerOrder" header="Today's Customer Order">
+                                <p:panel id="CustomerOrder" header="Today's Weight(gm)">
                                     <h:outputText value="#{dashboardView.data.todayOrderCnt}"/>
                                 </p:panel>
 
-                                <p:panel id="ConfirmedOrder" header="No of Orders this month">
+                                <p:panel id="ConfirmedOrder" header="Weight(gm) this month">
                                     <h:outputText value="#{dashboardView.data.monthlyOrderCnt}"/>
                                 </p:panel>
 

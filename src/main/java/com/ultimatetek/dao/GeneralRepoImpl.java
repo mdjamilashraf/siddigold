@@ -523,19 +523,23 @@ public class GeneralRepoImpl implements GeneralRepo {
 
     @Override
     public DashboardData getDashboardData() {
-        String todayDate = DateUtils.getFormattedDateForMysql(new Date());
+        String todayDate =  DateUtils.getFormattedDateForMysql(new Date());
         String mnthStartDate = DateUtils.getMonthStartDate();
-        String SQL = "select (select cast(count(*) as INTEGER) from sales_order m "
-                + "where m.stop_seq = 0 and m.order_date=\'"+todayDate+"\') daily_cnt,"
-                + "(select cast(count(*) as INTEGER) from sales_order m where m.stop_seq = 0 "
-                + "and m.order_date>=\'"+mnthStartDate+"\') monthly_cnt";
+        String SQL = "select (select cast(SUM(item_weight) as  float8)  from order_details_jewellery m "
+                + "where 1=1 and m.crt_date=\'"+todayDate+"\') today_wt,"
+                + "(select cast(SUM(item_weight) as  float8) from order_details_jewellery m where 1=1 "
+                + "and m.crt_date>=\'"+mnthStartDate+"\') monthly_wt";
         Query query = entityManager.createNativeQuery(SQL);
         Object[] objects =  (Object[]) query.getSingleResult();
         if (objects != null ) {
-          DashboardData data =  new DashboardData();
-          data.setTodayOrderCnt((Integer)objects[0]);
-          data.setMonthlyOrderCnt((Integer)objects[1]);
-          return data;
+            DashboardData data = new DashboardData();
+            double todayOrderCnt = objects[0] == null ? 0.0 : (Double) objects[0];
+            double monthlyOrderCnt = objects[1] == null ? 0.0 : (Double) objects[1];
+
+            data.setTodayOrderCnt(Math.round(todayOrderCnt * 100.0) / 100.0);
+            data.setMonthlyOrderCnt(Math.round(monthlyOrderCnt * 100.0) / 100.0);
+
+            return data;
         } else {
             return new DashboardData();
         }
