@@ -15,8 +15,12 @@
  */
 package com.ultimatetek.services;
 
+import com.ultimatetek.config.DateUtils;
 import com.ultimatetek.dao.GeneralRepo;
 import com.ultimatetek.model.DashboardData;
+import com.ultimatetek.model.OrderDetailsVO;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,11 +38,26 @@ public class DashboardServiceImpl implements DashboardService {
     @Override
     public DashboardData generateDashboardData() {
         return generalRepo.getDashboardData();
-//        Object[] objects =  generalRepo.getDashboardData();
-//        DashboardData data = new DashboardData();
-//        data.setTodayOrderCnt((Integer)objects[0]);
-//        data.setMonthlyOrderCnt((Integer)objects[1]);
-//        return data;
+    }
+
+    @Override
+    public List<OrderDetailsVO> getTodayOrderDue() {
+        return generalRepo.getTodayOrderDue(DateUtils.getFormattedDateForMysql(new Date()));
+    }
+
+    @Override
+    public List<OrderDetailsVO> getTopCustomersByWeight(Date startDate) {
+        List<Object[]> objects = generalRepo.getTopCustomersByWeight(startDate);
+        
+        List<OrderDetailsVO> list = new ArrayList<>();
+        for (Object[] obj : objects) {
+            OrderDetailsVO orderDtl = new OrderDetailsVO();
+            orderDtl.setCustCode((String)obj[0]);
+            orderDtl.setCustName((String)obj[1]);
+            orderDtl.setTotalWt((Double)obj[2]);
+            list.add(orderDtl);
+        }
+        return list;
     }
     
 }

@@ -4,10 +4,15 @@
  */
 package com.ultimatetek.controller;
 
+import com.ultimatetek.config.DateUtils;
 import com.ultimatetek.config.JSFUtils;
 import com.ultimatetek.model.DashboardData;
+import com.ultimatetek.model.OrderDetailsVO;
 import com.ultimatetek.services.DashboardService;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -41,6 +46,8 @@ public class DashboardView implements Serializable {
     private DashboardModel model;
     private BarChartModel barModel;
     private DashboardData data;
+    private List<OrderDetailsVO> todayOrdersDue;
+    private List<OrderDetailsVO> topCustOrdrsByWeight;
     
     @Autowired
     private DashboardService dashboardService;
@@ -62,10 +69,13 @@ public class DashboardView implements Serializable {
         
         if (userGrp == 1) {
             this.data = dashboardService.generateDashboardData();
+            this.todayDueOrder();
+            this.fetchTopCustOrdersByWeight();
         } else {
             this.data = new DashboardData();
         }
         this.createBarModel();
+        
     }
 
     public void handleReorder(DashboardReorderEvent event) {
@@ -133,6 +143,18 @@ public class DashboardView implements Serializable {
         yAxis.setLabel("Orders");
         yAxis.setMin(0);
         yAxis.setMax(500);
+    }
+    
+    public void todayDueOrder() {
+        //OrderDetailsVO ordrDtlLst = new OrderDetailsVO();
+        List<OrderDetailsVO> ordrDtlLst = dashboardService.getTodayOrderDue();
+        this.setTodayOrdersDue(ordrDtlLst);
+    }
+
+    private void fetchTopCustOrdersByWeight() {
+        Date startDate = DateUtils.getMonthDate("START");
+        List<OrderDetailsVO> ordrDtlLst = dashboardService.getTopCustomersByWeight(startDate);
+        this.setTopCustOrdrsByWeight(ordrDtlLst);
     }
  
 }

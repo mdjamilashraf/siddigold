@@ -75,6 +75,7 @@ public class OrderDetailsVO extends AuditFieldsVO implements Serializable {
     private String[] imgPath1;
     private String rprtLbl;
     private Object rprtVal;
+    private Double totalWt;
     
 
     public OrderDetailsVO(Long orderDtlNo, String rprtLbl, Object rprtVal) {

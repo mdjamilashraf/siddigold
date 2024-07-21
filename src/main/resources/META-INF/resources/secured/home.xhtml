@@ -5,60 +5,128 @@
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:p="http://primefaces.org/ui" dir="ltr">
-<f:view rendered="true" contentType="text/html">
-    <h:head>
-        <f:facet name="first">
-            <meta http-equiv="X-UA-Compatible" content="EmulateIE8" />
-            <meta content='text/html; charset=UTF-8' http-equiv="Content-Type"/>
-            <title>Dashboard</title>
-        </f:facet>
-        <style>
-            
-            .ui-dashboard-column {
-                width: 220px;
-            }
+    <f:view rendered="true">
+        <h:head>
+            <f:facet name="first">
+                <meta http-equiv="X-UA-Compatible" content="EmulateIE8" />
+                <meta content='text/html; charset=UTF-8' http-equiv="Content-Type"/>
+                <title>Dashboard</title>
+            </f:facet>
+            <style>
 
-        </style>
-    </h:head>
-    <h:body>
-        <h:outputStylesheet name="css/default.css" />
-        <h:form>
-            <p:layout fullPage="true">
-                <p:layoutUnit position="north" styleClass="ui-layout-north" style="border: 0px;">
-                    <ui:include  src="/secured/globalResources/headerMenu.xhtml"  />
-                </p:layoutUnit>
-                <p:layoutUnit position="center" style="border: 0px;">
-                    <p:growl id="msgs" showDetail="true" />
-                    <p:panel header="Dashboard">
-                        <p:panelGrid columns="4">
+                .ui-dashboard-column {
+                    width: 220px;
+                }
 
-                            <p:dashboard id="board" model="#{dashboardView.model}">
-                                <p:ajax event="reorder" listener="#{dashboardView.handleReorder}" update="msgs"/>
+            </style>
+        </h:head>
+        <h:body>
+            <h:outputStylesheet name="css/default.css" />
+            <h:form>
+                <p:layout fullPage="true">
+                    <p:layoutUnit position="north" styleClass="ui-layout-north" style="border: 0px;">
+                        <ui:include  src="/secured/globalResources/headerMenu.xhtml"  />
+                    </p:layoutUnit>
+                    <p:layoutUnit position="center" style="border: 0px;">
+                        <p:growl id="msgs" showDetail="true" />
 
-                                <p:panel id="CustomerOrder" header="Today's Weight(gm)">
-                                    <h:outputText value="#{dashboardView.data.todayOrderCnt}"/>
-                                </p:panel>
+                        <p:panelGrid columns="2">
+                            <p:panel style="width: 750px; height: 200px;" header="Dashboard">
+                                <p:dashboard id="board" model="#{dashboardView.model}" >
+                                    <p:ajax event="reorder" listener="#{dashboardView.handleReorder}" update="msgs"/>
 
-                                <p:panel id="ConfirmedOrder" header="Weight(gm) this month">
-                                    <h:outputText value="#{dashboardView.data.monthlyOrderCnt}"/>
-                                </p:panel>
+                                    <p:panel id="CustomerOrder" header="Today's Weight(gm)">
+                                        <h:outputText value="#{dashboardView.data.todayOrderCnt}"/>
+                                    </p:panel>
 
-                                <p:panel id="OrderDeliverd" header="Order Deliverd">
-                                    <h:outputText value="20"/>
-                                </p:panel>
+                                    <p:panel id="ConfirmedOrder" header="Weight(gm) this month">
+                                        <h:outputText value="#{dashboardView.data.monthlyOrderCnt}"/>
+                                    </p:panel>
 
-                            </p:dashboard>
+                                    <p:panel id="OrderDeliverd" header="Today's due order">
+                                        <p:commandLink action="#{dashboardView.todayDueOrder()}" update="ordrDueTodayOutPnl">
+                                            <h:outputText style="font-weight: bold" value="#{dashboardView.data.dailyDueCount}"/>
+                                        </p:commandLink>
+                                    </p:panel>
+
+                                </p:dashboard> 
+                            </p:panel>
+                            <p:panel style="width: 600px; height: 200px;">
+                                <p:dataTable rendered="#{not empty dashboardView.topCustOrdrsByWeight}" 
+                                             value="#{dashboardView.topCustOrdrsByWeight}" var="ordr"
+                                             rowKey="#{ordr.custCode}" style="width: 100%" scrollable="true" scrollHeight="135">
+                                    <f:facet name="header">
+                                        Top 10 Customer's Order By Wt.
+                                    </f:facet>
+                                    <p:column headerText="Customer Code" style="width:65px">
+                                        <h:outputText value="#{ordr.custCode}" style="display: block; text-align: center;"/>
+                                    </p:column>
+                                    <p:column headerText="Customer Name" style="width:65px">
+                                        <h:outputText value="#{ordr.custName}" style="display: block; text-align: center;"/>
+                                    </p:column>
+                                    <p:column headerText="Ordered Wt(gm)" style="width:65px">
+                                        <h:outputText value="#{ordr.totalWt}" style="display: block; text-align: center;">
+                                            <f:convertNumber pattern="###.##" />
+                                        </h:outputText>
+                                    </p:column>
+                                </p:dataTable>
+                            </p:panel>
                         </p:panelGrid>
-                        
-                    </p:panel>
-                    <p:chart type="bar" model="#{dashboardView.barModel}" style="height:300px; width: 500px"/>
-                </p:layoutUnit>
-                <p:layoutUnit position="south" size="50">
 
-                </p:layoutUnit>
-            </p:layout>  
-        </h:form>
-    </h:body>
-</f:view>
+
+                        <p:outputPanel id="ordrDueTodayOutPnl">
+                            <p:dataTable rendered="#{not empty dashboardView.todayOrdersDue}" 
+                                         value="#{dashboardView.todayOrdersDue}" var="ordr"
+                                         rowKey="#{ordr.orderNo}" style="width: 75%" scrollable="true" scrollHeight="300">
+                                <f:facet name="header">
+                                    Today's Due Order
+                                </f:facet>
+                                <p:column headerText="Order No." style="width:65px">
+                                    <h:outputText value="#{ordr.orderNo}" style="display: block; text-align: center;"/>
+                                </p:column>
+                                <p:column headerText="SL No." style="width:65px">
+                                    <h:outputText value="#{ordr.srlNo}" style="display: block; text-align: center;"/>
+                                </p:column>
+                                <p:column headerText="Customer" style="width:65px">
+                                    <h:outputText value="#{ordr.custName}" style="display: block; text-align: center;"/>
+                                </p:column>
+                                <p:column headerText="Item Code" style="width:65px">
+                                    <h:outputText value="#{ordr.itemCode}" style="display: block; text-align: center;"/>
+                                </p:column>
+                                <p:column headerText="Item Name" style="width:65px">
+                                    <h:outputText value="#{ordr.itemName}" style="display: block; text-align: center;"/>
+                                </p:column>
+                                <p:column headerText="Qty" style="width:65px">
+                                    <h:outputText value="#{ordr.qty}" style="display: block; text-align: center;"/>
+                                </p:column>
+                                <p:column headerText="Weight" style="width:65px">
+                                    <h:outputText value="#{ordr.weight}" style="display: block; text-align: center;"/>
+                                </p:column>
+                                <p:column headerText="Size" style="width:65px">
+                                    <h:outputText value="#{ordr.itemSize}" style="display: block; text-align: center;"/>
+                                </p:column>
+                                <p:column headerText="Ref. No" style="width:65px">
+                                    <h:outputText value="#{ordr.refNo}" style="display: block; text-align: center;"/>
+                                </p:column>
+                                <p:column headerText="Order Date" style="width:65px">
+                                    <h:outputText value="#{ordr.formatedOrdrDate}" style="display: block; text-align: center;"/>
+                                </p:column>
+                                <p:column headerText="Due Date" style="width:65px">
+                                    <h:outputText value="#{ordr.formatedDueDate}" style="display: block; text-align: center;"/>
+                                </p:column>
+                                <p:column headerText="Workshop" style="width:65px">
+                                    <h:outputText value="#{ordr.wrkshpCode}" style="display: block; text-align: center;"/>
+                                </p:column>
+                            </p:dataTable>        
+                        </p:outputPanel>
+                        <!--<p:chart type="bar" model="{dashboardView.barModel}" style="height:300px; width: 500px"/>-->
+                    </p:layoutUnit>
+                    <p:layoutUnit position="south" size="50">
+
+                    </p:layoutUnit>
+                </p:layout>  
+            </h:form>
+        </h:body>
+    </f:view>
 </html>
 

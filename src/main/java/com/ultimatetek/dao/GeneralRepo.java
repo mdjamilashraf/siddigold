@@ -73,4 +73,8 @@ public interface GeneralRepo {
     public void insertIntoSalesOrdrHist(Long minOrdrNo, Long maxOrdrNo);
 
     public DashboardData getDashboardData();
+
+    public List<OrderDetailsVO> getTodayOrderDue(String formattedDateForMysql);
+    
+    public List<Object[]> getTopCustomersByWeight(Date startDate);
 }

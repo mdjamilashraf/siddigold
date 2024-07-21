@@ -21,6 +21,8 @@ package com.ultimatetek.model;
  */
 @lombok.Data
 public class DashboardData {
-    private Double todayOrderCnt;
-    private Double monthlyOrderCnt;
+
+    private Double todayOrderCnt = 0.0;
+    private Double monthlyOrderCnt = 0.0;
+    private Integer dailyDueCount = 0;
 }

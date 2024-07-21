@@ -20,6 +20,7 @@ import com.ultimatetek.config.StringUtils;
 import com.ultimatetek.entity.OrderDetailsJewellery;
 import com.ultimatetek.model.DashboardData;
 import com.ultimatetek.model.OrderDetailsVO;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -528,7 +529,9 @@ public class GeneralRepoImpl implements GeneralRepo {
         String SQL = "select (select cast(SUM(item_weight) as  float8)  from order_details_jewellery m "
                 + "where 1=1 and m.crt_date=\'"+todayDate+"\') today_wt,"
                 + "(select cast(SUM(item_weight) as  float8) from order_details_jewellery m where 1=1 "
-                + "and m.crt_date>=\'"+mnthStartDate+"\') monthly_wt";
+                + "and m.crt_date>=\'"+mnthStartDate+"\') monthly_wt,"
+                + "(select cast(count(1) as INTEGER) from order_details_jewellery "
+                + "where due_date = \'"+todayDate+"\') today_due";
         Query query = entityManager.createNativeQuery(SQL);
         Object[] objects =  (Object[]) query.getSingleResult();
         if (objects != null ) {
@@ -538,10 +541,61 @@ public class GeneralRepoImpl implements GeneralRepo {
 
             data.setTodayOrderCnt(Math.round(todayOrderCnt * 100.0) / 100.0);
             data.setMonthlyOrderCnt(Math.round(monthlyOrderCnt * 100.0) / 100.0);
+            data.setDailyDueCount((Integer)objects[2]);
 
             return data;
         } else {
             return new DashboardData();
         }
+    }
+
+    @Override
+    public List<OrderDetailsVO> getTodayOrderDue(String todayDate) {
+        String HQL = "Select d.rcrdNo, d.itemCode, d.itemWeight, d.itemSize, d.itemQty, d.dueDate, d.crtDate, "
+                + "d.refNo, d.salesOrder.orderNo, c.custName, d.wrkshpCode, "
+                + "(select itmName from ItemMst t where t.itmCode=d.itemCode) "
+                + "from SalesOrder m, OrderDetailsJewellery d, CustomerDetailOthr c "
+                + "where m.orderNo = d.salesOrder.orderNo and m.custCode = c.custCode and "
+                + "d.dueDate = \'"+todayDate+"\' order by m.orderNo";
+        Query query = entityManager.createQuery(HQL);
+        List<Object[]> objects = query.getResultList();
+        List<OrderDetailsVO> list = new ArrayList<>();
+        if (objects != null) {
+            for (Object[] obj : objects) {
+                OrderDetailsVO ordrDtl = new OrderDetailsVO();
+                ordrDtl.setSrlNo(((Integer) obj[0]).shortValue());
+                ordrDtl.setItemCode((String) obj[1]);
+                ordrDtl.setWeight((Float) obj[2]);
+                ordrDtl.setItemSize((String) obj[3]);
+                ordrDtl.setQty((Integer) obj[4]);
+                ordrDtl.setDueDate((Date) obj[5]);
+                ordrDtl.setFormatedDueDate(DateUtils.convertDateToStringFormat((Date) obj[5], "dd/MM/yyyy"));
+                ordrDtl.setOrderDate((Date) obj[6]);
+                ordrDtl.setFormatedOrdrDate(DateUtils.convertDateToStringFormat((Date) obj[6], "dd/MM/yyyy"));
+                ordrDtl.setRefNo((String) obj[7]);
+                ordrDtl.setOrderNo((Long) obj[8]);
+                ordrDtl.setCustName((String) obj[9]);
+                ordrDtl.setWrkshpCode((String) obj[10]);
+                ordrDtl.setItemName((String) obj[11]);
+                list.add(ordrDtl);
+            }
+        }
+        return list;
+    }
+    
+    @Override
+    public List<Object[]> getTopCustomersByWeight(Date startDate) {
+        String hql = "SELECT m.custCode, c.custName, SUM(d.itemWeight) " +
+                     "FROM SalesOrder m, OrderDetailsJewellery d, CustomerDetailOthr c " +
+                     "WHERE m.custCode=c.custCode and m.orderNo = d.salesOrder.orderNo " +
+                     "and m.orderDate > :startDate " +
+                     "GROUP BY m.custCode, c.custName " +
+                     "ORDER BY SUM(d.itemWeight) DESC";
+
+        Query query = entityManager.createQuery(hql);
+        query.setParameter("startDate", startDate);
+        query.setMaxResults(10);
+
+        return query.getResultList();
     }
 }

@@ -16,6 +16,9 @@
 package com.ultimatetek.services;
 
 import com.ultimatetek.model.DashboardData;
+import com.ultimatetek.model.OrderDetailsVO;
+import java.util.Date;
+import java.util.List;
 
 /**
  *
@@ -24,5 +27,9 @@ import com.ultimatetek.model.DashboardData;
 public interface DashboardService {
 
     public DashboardData generateDashboardData();
+
+    public List<OrderDetailsVO> getTodayOrderDue();
+    
+    public List<OrderDetailsVO> getTopCustomersByWeight(Date startDate);
     
 }
