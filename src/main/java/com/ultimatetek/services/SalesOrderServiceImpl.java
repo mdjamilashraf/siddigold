@@ -169,6 +169,7 @@ public class SalesOrderServiceImpl implements SalesOrderService {
                 ordrDtlEntity.setWrkshpStatus(1);//Recive
                 ordrDtlEntity.setWrkshpStatusDate(DateUtils.getTodayDate());
             }
+            ordrDtlEntity.setPriority(ordrDtlVo.getPriority());
             ordrDtlEntity.setCrtDate(DateUtils.getTodayDate());
             ordrDtlEntity.setCrtTrmnlNm("Server");
             ordrDtlEntity.setCrtUsrNo(1);

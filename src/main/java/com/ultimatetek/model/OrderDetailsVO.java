@@ -62,6 +62,7 @@ public class OrderDetailsVO extends AuditFieldsVO implements Serializable {
     private Date wrkshpCloseDate;
     private Date wrkshpCancelDate;
     private Date orderCloseDate;
+    private String priority = "Normal";
     private String formatedWrkshpCloseDate;
     private String formatedWrkshpCancelDate;
     private String formatedOrderCloseDate;

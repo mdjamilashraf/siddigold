@@ -158,6 +158,8 @@ public class OrderDetailsJewellery implements Serializable {
     @Temporal(TemporalType.DATE)
     @Column(name = "wrkshp_issue_wrkr_date")
     private Date wrkshpIssueWrkrDate;
+    @Column(name = "priority")
+    private String priority;
 //    @Temporal(TemporalType.DATE)
 //    @Column(name = "order_cnfrm_date")
 //    private Date orderCnfrmDate;
@@ -495,6 +497,14 @@ public class OrderDetailsJewellery implements Serializable {
 
     public void setWrkshpIssueWrkrDate(Date wrkshpIssueWrkrDate) {
         this.wrkshpIssueWrkrDate = wrkshpIssueWrkrDate;
+    }
+
+    public String getPriority() {
+        return priority;
+    }
+
+    public void setPriority(String priority) {
+        this.priority = priority;
     }
 
 }
