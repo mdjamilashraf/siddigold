@@ -531,7 +531,7 @@ public class GeneralRepoImpl implements GeneralRepo {
                 + "(select cast(SUM(item_weight) as  float8) from order_details_jewellery m where 1=1 "
                 + "and m.crt_date>=\'"+mnthStartDate+"\') monthly_wt,"
                 + "(select cast(count(1) as INTEGER) from order_details_jewellery "
-                + "where due_date = \'"+todayDate+"\') today_due";
+                + "where due_date <= \'"+todayDate+"\' and wrkshp_status in (1,2)) today_due";
         Query query = entityManager.createNativeQuery(SQL);
         Object[] objects =  (Object[]) query.getSingleResult();
         if (objects != null ) {
@@ -556,7 +556,7 @@ public class GeneralRepoImpl implements GeneralRepo {
                 + "(select itmName from ItemMst t where t.itmCode=d.itemCode) "
                 + "from SalesOrder m, OrderDetailsJewellery d, CustomerDetailOthr c "
                 + "where m.orderNo = d.salesOrder.orderNo and m.custCode = c.custCode and "
-                + "d.dueDate = \'"+todayDate+"\' order by m.orderNo";
+                + "d.dueDate <= \'"+todayDate+"\' and wrkshp_status in (1,2) order by m.orderNo";
         Query query = entityManager.createQuery(HQL);
         List<Object[]> objects = query.getResultList();
         List<OrderDetailsVO> list = new ArrayList<>();

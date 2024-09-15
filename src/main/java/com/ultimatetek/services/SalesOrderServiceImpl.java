@@ -484,7 +484,7 @@ public class SalesOrderServiceImpl implements SalesOrderService {
                 String[] fileNamesSeparator = fileName.split(",");
                 ordrDtl.setImgPath1(fileNamesSeparator);
             }
-
+            ordrDtl.setPriority(entity.getPriority());
             //ordrDtl.setWrkshpStatus(searchParam.getOrderStatus());
             ordrDtlList.add(ordrDtl);
         }

@@ -32,6 +32,7 @@
 
 
             </script>
+            
         </h:head>
         <h:body dir="ltr">
             <h:outputStylesheet name="primeicons/primeicons.css" library="primefaces" />
@@ -89,6 +90,7 @@
                         <p:outputPanel id="ordrDtlPnl" rendered="#{manageSalesOrderView.showList}">
                             <p:dataTable id="order" widgetVar="order" var="order" value="#{manageSalesOrderView.orders}" 
                                          editable="true" editMode="cell" scrollable="true" scrollHeight="475"
+                                         rowStyleClass="#{order.priority eq 'Urgent' ? 'row-highlight' : null}"
                                          selection="#{manageSalesOrderView.selectedOrdrLst}" sortBy="#{order.orderDtlNo}" rowKey="#{order.orderDtlNo}"
                                          style="margin-bottom:25px; height: 490px; padding: 0px;" paginator="true"   rows="10" paginatorPosition="bottom">
 
@@ -434,6 +436,9 @@
                                 <h:outputText value="Terminal:" rendered="#{salesOrderView.userGrp eq 1}"/>
                                 <p:inputText value="#{manageSalesOrderView.selectedOrders.crtTrmnlNm}" rendered="#{salesOrderView.userGrp eq 1}"
                                              style="background-color: greenyellow;" readonly="true" />
+                                <h:outputText value="Priority:" rendered="#{salesOrderView.userGrp eq 1}"/>
+                                <p:inputText value="#{manageSalesOrderView.selectedOrders.priority}" rendered="#{salesOrderView.userGrp eq 1}"
+                                             readonly="true" />
                                 <f:facet name="footer">
                                     <p:commandButton id="editOrdr" rendered="#{manageSalesOrderView.userGrp eq 1}"
                                                      value="Update" icon="ui-icon-arrowthickstop-1-s"
