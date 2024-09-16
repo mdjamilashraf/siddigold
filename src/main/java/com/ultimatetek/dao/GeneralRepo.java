@@ -74,7 +74,9 @@ public interface GeneralRepo {
 
     public DashboardData getDashboardData();
 
-    public List<OrderDetailsVO> getTodayOrderDue(String formattedDateForMysql);
+    public List<OrderDetailsVO> getTodayOrderDue(String userCode ,String formattedDateForMysql);
     
     public List<Object[]> getTopCustomersByWeight(Date startDate);
+    
+    public DashboardData getWrkshpDashboardData(String wrkshpCode);
 }

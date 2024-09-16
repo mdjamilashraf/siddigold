@@ -5,21 +5,21 @@
     xmlns:ui="http://java.sun.com/jsf/facelets"
     xmlns:p="http://primefaces.org/ui">
     <p:menubar>
-        <p:menuitem value="Dasboard" action="home" immediate="true" ajax="false" icon="ui-icon-home"/>
+        <p:menuitem value="Dasboard" action="home?faces-redirect=true" immediate="true" ajax="false" icon="ui-icon-home"/>
         <p:submenu label="Setup" rendered="#{userPrivView.userGrp lt 3}">
-            <p:menuitem value="#{msg.MANAGE_ADMIN}"  action="addAdminUser" immediate="true" ajax="false" rendered="#{userPrivView.privAddAdminUser==1}"/>
-            <p:menuitem value="#{msg.MANAGE_WORKSHOP}"  action="addWorkshopUser" immediate="true" ajax="false" rendered="#{userPrivView.privAddWorkshopUser==1}"/>
-            <p:menuitem value="#{msg.MANAGE_CUSTOMER}"  action="addCust" immediate="true" ajax="false" rendered="#{userPrivView.privAddCustomer==1}"/>
-            <p:menuitem value="#{msg.ITEM_MASTER}"  action="addItem" immediate="true" ajax="false" rendered="#{userPrivView.privItemMst==1}"/>
-            <p:menuitem value="#{msg.DEFAULT_MELTING}"  action="dfltMelting" immediate="true" ajax="false" rendered="#{userPrivView.privDfltMelting==1}"/>
-            <p:menuitem value="#{msg.MANAGE_WORKER}"  action="manageWorker" immediate="true" ajax="false" rendered="#{userPrivView.privWorkerMgmnt==1}"/>
-            <p:menuitem value="#{msg.RESET_ORDERS}"  action="resetOrders" immediate="true" ajax="false" rendered="#{userPrivView.privResetOrders==1}"/>
+            <p:menuitem value="#{msg.MANAGE_ADMIN}"  action="addAdminUser?faces-redirect=true" immediate="true" ajax="false" rendered="#{userPrivView.privAddAdminUser==1}"/>
+            <p:menuitem value="#{msg.MANAGE_WORKSHOP}"  action="addWorkshopUser?faces-redirect=true" immediate="true" ajax="false" rendered="#{userPrivView.privAddWorkshopUser==1}"/>
+            <p:menuitem value="#{msg.MANAGE_CUSTOMER}"  action="addCust?faces-redirect=true" immediate="true" ajax="false" rendered="#{userPrivView.privAddCustomer==1}"/>
+            <p:menuitem value="#{msg.ITEM_MASTER}"  action="addItem?faces-redirect=true" immediate="true" ajax="false" rendered="#{userPrivView.privItemMst==1}"/>
+            <p:menuitem value="#{msg.DEFAULT_MELTING}"  action="dfltMelting?faces-redirect=true" immediate="true" ajax="false" rendered="#{userPrivView.privDfltMelting==1}"/>
+            <p:menuitem value="#{msg.MANAGE_WORKER}"  action="manageWorker?faces-redirect=true" immediate="true" ajax="false" rendered="#{userPrivView.privWorkerMgmnt==1}"/>
+            <p:menuitem value="#{msg.RESET_ORDERS}"  action="resetOrders?faces-redirect=true" immediate="true" ajax="false" rendered="#{userPrivView.privResetOrders==1}"/>
         </p:submenu>
 
-        <p:menuitem value="#{msg.ORDER_ENTRY}"  action="salesOrder" immediate="true" ajax="false" rendered="#{userPrivView.privEntryOrdr==1}" icon="ui-icon-star"/>
-        <p:menuitem value="#{msg.CHECK_ORDER_STATUS}" action="manageOrder" immediate="true" ajax="false" rendered="#{userPrivView.privOrdrStatus==1}" icon="ui-icon-search"/>
-        <p:menuitem value="#{msg.WORKSHOP_ORDER}" action="workshopOrder" immediate="true" ajax="false" rendered="#{userPrivView.privWorkshopOrdr==1}" icon="ui-icon-search"/>
-        <p:menuitem value="#{msg.RESET_PASSWORD}" action="resetPswrd" immediate="true" ajax="false" rendered="false" />
+        <p:menuitem value="#{msg.ORDER_ENTRY}"  action="salesOrder?faces-redirect=true" immediate="true" ajax="false" rendered="#{userPrivView.privEntryOrdr==1}" icon="ui-icon-star"/>
+        <p:menuitem value="#{msg.CHECK_ORDER_STATUS}" action="manageOrder?faces-redirect=true" immediate="true" ajax="false" rendered="#{userPrivView.privOrdrStatus==1}" icon="ui-icon-search"/>
+        <p:menuitem value="#{msg.WORKSHOP_ORDER}" action="workshopOrder?faces-redirect=true" immediate="true" ajax="false" rendered="#{userPrivView.privWorkshopOrdr==1}" icon="ui-icon-search"/>
+        <p:menuitem value="#{msg.RESET_PASSWORD}" action="resetPswrd?faces-redirect=true" immediate="true" ajax="false" rendered="false" />
         <f:facet name="options">
             <p:outputLabel value="#{AuthenticationManageBean.userName}" /><p:outputLabel value=" " />
             <p:commandButton value="Sign-Out" action="#{AuthenticationManageBean.signout()}" 

@@ -28,8 +28,10 @@ public interface DashboardService {
 
     public DashboardData generateDashboardData();
 
-    public List<OrderDetailsVO> getTodayOrderDue();
+    public List<OrderDetailsVO> getTodayOrderDue(String userCode);
     
     public List<OrderDetailsVO> getTopCustomersByWeight(Date startDate);
+
+    public DashboardData generateWrkshpDashboardData(String userCode);
     
 }

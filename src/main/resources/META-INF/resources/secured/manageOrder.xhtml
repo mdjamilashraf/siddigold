@@ -437,8 +437,13 @@
                                 <p:inputText value="#{manageSalesOrderView.selectedOrders.crtTrmnlNm}" rendered="#{salesOrderView.userGrp eq 1}"
                                              style="background-color: greenyellow;" readonly="true" />
                                 <h:outputText value="Priority:" rendered="#{salesOrderView.userGrp eq 1}"/>
-                                <p:inputText value="#{manageSalesOrderView.selectedOrders.priority}" rendered="#{salesOrderView.userGrp eq 1}"
-                                             readonly="true" />
+                                <p:selectOneMenu id="priority" value="#{manageSalesOrderView.selectedOrders.priority}" editable="true" 
+                                                 style="width: 180px;" >
+                                    <f:selectItem itemLabel="Normal" itemValue="Normal" />
+                                    <f:selectItem itemLabel="Urgent" itemValue="Urgent" />
+                                    <p:ajax event="change" update="@this" />
+                                </p:selectOneMenu>
+                                
                                 <f:facet name="footer">
                                     <p:commandButton id="editOrdr" rendered="#{manageSalesOrderView.userGrp eq 1}"
                                                      value="Update" icon="ui-icon-arrowthickstop-1-s"

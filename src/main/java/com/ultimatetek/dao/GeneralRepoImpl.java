@@ -332,7 +332,7 @@ public class GeneralRepoImpl implements GeneralRepo {
                 + "d.days=:days, d.dueDate=:dueDate, d.refNo=:refNo,"
                 + "itemQty=:itemQty,d.itemWeight=:weight, d.hook=:hook, d.rcvSample=:rcvSample, d.designSample=:designSample,"
                 + "d.sizeSample=:sizeSample, d.priceType=:priceType, d.itemPrice=:itemPrice, d.orderType=:orderType, d.remarks=:remarks,"
-                + "updUsrNo=:updUsrNo, updDate=:updDate,updCnt=updCnt+1 "
+                + "d.priority=:priority, updUsrNo=:updUsrNo, updDate=:updDate,updCnt=updCnt+1 "
                 + "where d.salesOrder.orderNo=:orderNo and d.rcrdNo=:rcrdNo";
         Query query = entityManager.createQuery(SQL_UPDATE);
         query.setParameter("wrkshpCode", ordrDtl.getWrkshpCode());
@@ -362,6 +362,7 @@ public class GeneralRepoImpl implements GeneralRepo {
         }
         query.setParameter("orderType", ordrDtl.getOrderTyp());
         query.setParameter("remarks", ordrDtl.getRemark());
+        query.setParameter("priority", ordrDtl.getPriority());
         query.setParameter("updUsrNo", ordrDtl.getUpdUsrNo());
         query.setParameter("updDate", ordrDtl.getUpdDate());
         query.setParameter("orderNo", ordrDtl.getOrderNo());
@@ -550,13 +551,17 @@ public class GeneralRepoImpl implements GeneralRepo {
     }
 
     @Override
-    public List<OrderDetailsVO> getTodayOrderDue(String todayDate) {
+    public List<OrderDetailsVO> getTodayOrderDue(String userCode, String todayDate) {
         String HQL = "Select d.rcrdNo, d.itemCode, d.itemWeight, d.itemSize, d.itemQty, d.dueDate, d.crtDate, "
                 + "d.refNo, d.salesOrder.orderNo, c.custName, d.wrkshpCode, "
                 + "(select itmName from ItemMst t where t.itmCode=d.itemCode) "
                 + "from SalesOrder m, OrderDetailsJewellery d, CustomerDetailOthr c "
                 + "where m.orderNo = d.salesOrder.orderNo and m.custCode = c.custCode and "
-                + "d.dueDate <= \'"+todayDate+"\' and wrkshp_status in (1,2) order by m.orderNo";
+                + "d.dueDate <= \'"+todayDate+"\'  and wrkshp_status in (1,2) ";
+        if (userCode != null) {
+            HQL += " and wrkshp_code=\'"+userCode+"\' ";
+        }
+        HQL += " order by m.orderNo";
         Query query = entityManager.createQuery(HQL);
         List<Object[]> objects = query.getResultList();
         List<OrderDetailsVO> list = new ArrayList<>();
@@ -597,5 +602,32 @@ public class GeneralRepoImpl implements GeneralRepo {
         query.setMaxResults(10);
 
         return query.getResultList();
+    }
+    
+    @Override
+    public DashboardData getWrkshpDashboardData(String wrkshpCode) {
+        String todayDate =  DateUtils.getFormattedDateForMysql(new Date());
+        String mnthStartDate = DateUtils.getMonthStartDate();
+        String SQL = "select (select cast(SUM(item_weight) as  float8)  from order_details_jewellery m "
+                + "where 1=1 and m.crt_date=\'"+todayDate+"\') today_wt,"
+                + "(select cast(SUM(item_weight) as  float8) from order_details_jewellery m where 1=1 "
+                + "and m.crt_date>=\'"+mnthStartDate+"\') monthly_wt,"
+                + "(select cast(count(1) as INTEGER) from order_details_jewellery "
+                + "where due_date <= \'"+todayDate+"\' and wrkshp_code= \'"+wrkshpCode+"\' and wrkshp_status in (1,2)) today_due";
+        Query query = entityManager.createNativeQuery(SQL);
+        Object[] objects =  (Object[]) query.getSingleResult();
+        if (objects != null ) {
+            DashboardData data = new DashboardData();
+            //double todayOrderCnt = objects[0] == null ? 0.0 : (Double) objects[0];
+            //double monthlyOrderCnt = objects[1] == null ? 0.0 : (Double) objects[1];
+
+            data.setTodayOrderCnt(0.0);
+            data.setMonthlyOrderCnt(0.0);
+            data.setDailyDueCount((Integer)objects[2]);
+
+            return data;
+        } else {
+            return new DashboardData();
+        }
     }
 }

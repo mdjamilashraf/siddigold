@@ -41,8 +41,8 @@ public class DashboardServiceImpl implements DashboardService {
     }
 
     @Override
-    public List<OrderDetailsVO> getTodayOrderDue() {
-        return generalRepo.getTodayOrderDue(DateUtils.getFormattedDateForMysql(new Date()));
+    public List<OrderDetailsVO> getTodayOrderDue(String userCode) {
+        return generalRepo.getTodayOrderDue(userCode, DateUtils.getFormattedDateForMysql(new Date()));
     }
 
     @Override
@@ -58,6 +58,11 @@ public class DashboardServiceImpl implements DashboardService {
             list.add(orderDtl);
         }
         return list;
+    }
+
+    @Override
+    public DashboardData generateWrkshpDashboardData(String userCode) {
+        return generalRepo.getWrkshpDashboardData(userCode);
     }
     
 }

@@ -42,13 +42,15 @@ import org.springframework.stereotype.Component;
 @ViewScoped
 @Data
 public class DashboardView implements Serializable {
+
     private Integer userGrp = (Integer) JSFUtils.getFromSession("userGrp");
+    private String userCode = (String) JSFUtils.getFromSession("userCode");
     private DashboardModel model;
     private BarChartModel barModel;
     private DashboardData data;
     private List<OrderDetailsVO> todayOrdersDue;
     private List<OrderDetailsVO> topCustOrdrsByWeight;
-    
+
     @Autowired
     private DashboardService dashboardService;
 
@@ -66,16 +68,20 @@ public class DashboardView implements Serializable {
         model.addColumn(column1);
         model.addColumn(column2);
         model.addColumn(column3);
-        
+
         if (userGrp == 1) {
             this.data = dashboardService.generateDashboardData();
-            this.todayDueOrder();
+            this.todayDueOrder(null);//all user
             this.fetchTopCustOrdersByWeight();
+        } else if (userGrp == 2) {
+            this.data = dashboardService.generateWrkshpDashboardData(userCode);
+            this.todayDueOrder(userCode);
+            //this.fetchTopCustOrdersByWeight();
         } else {
             this.data = new DashboardData();
         }
         this.createBarModel();
-        
+
     }
 
     public void handleReorder(DashboardReorderEvent event) {
@@ -109,46 +115,59 @@ public class DashboardView implements Serializable {
     public DashboardModel getModel() {
         return model;
     }
-    
-        private BarChartModel initBarModel() {
+
+    private BarChartModel initBarModel() {
         BarChartModel model = new BarChartModel();
- 
+
         ChartSeries boys = new ChartSeries();
         boys.setLabel("Confirm");
         boys.set("Jan", 452);
         boys.set("Feb", 100);
         boys.set("Mar", 0);
- 
+
         ChartSeries girls = new ChartSeries();
         girls.setLabel("Close");
         girls.set("Jan", 277);
         girls.set("Feb", 60);
         girls.set("Mar", 0);
- 
+
         model.addSeries(boys);
         model.addSeries(girls);
- 
+
         return model;
     }
+
     private void createBarModel() {
         barModel = initBarModel();
- 
+
         barModel.setTitle("Bar Chart");
         barModel.setLegendPosition("ne");
- 
+
         Axis xAxis = barModel.getAxis(AxisType.X);
         xAxis.setLabel("Months");
- 
+
         Axis yAxis = barModel.getAxis(AxisType.Y);
         yAxis.setLabel("Orders");
         yAxis.setMin(0);
         yAxis.setMax(500);
     }
-    
-    public void todayDueOrder() {
+
+    private void todayDueOrder(String userCode) {
         //OrderDetailsVO ordrDtlLst = new OrderDetailsVO();
-        List<OrderDetailsVO> ordrDtlLst = dashboardService.getTodayOrderDue();
+        List<OrderDetailsVO> ordrDtlLst = dashboardService.getTodayOrderDue(userCode);
         this.setTodayOrdersDue(ordrDtlLst);
+    }
+
+    public void todayDueOrder() {
+        if (userGrp == 1) {
+            //this.data = dashboardService.generateDashboardData();
+            this.todayDueOrder(null);//all user
+            // this.fetchTopCustOrdersByWeight();
+        } else if (userGrp == 2) {
+            ///this.data = dashboardService.generateWrkshpDashboardData(userCode);
+            this.todayDueOrder(this.userCode);
+            //this.fetchTopCustOrdersByWeight();
+        }
     }
 
     private void fetchTopCustOrdersByWeight() {
@@ -156,5 +175,5 @@ public class DashboardView implements Serializable {
         List<OrderDetailsVO> ordrDtlLst = dashboardService.getTopCustomersByWeight(startDate);
         this.setTopCustOrdrsByWeight(ordrDtlLst);
     }
- 
+
 }

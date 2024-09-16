@@ -82,6 +82,7 @@
                         </p:panel>
                         <p:outputPanel id="ordrDtlPnl" rendered="#{workshopOrdersView.showList}">
                             <p:dataTable id="order" widgetVar="order" var="order" value="#{workshopOrdersView.orders}" 
+                                         rowStyleClass="#{order.priority eq 'Urgent' ? 'row-highlight' : null}"
                                          editable="true" editMode="cell" scrollable="true" scrollHeight="480"
                                          style="margin-bottom:50px; height: 500px;" paginator="true"  rows="10"
                                          paginatorPosition="bottom"  selection="#{workshopOrdersView.selectedOrdrLst}"
@@ -393,6 +394,13 @@
                             <p:inputText value="#{workshopOrdersView.selectedOrders.formatedOrderCloseDate}" readonly="true">
                                 <p:ajax event="change" update="@this" />
                             </p:inputText>
+                            <h:outputText value="Priority:" />
+                            <p:selectOneMenu id="priority" value="#{workshopOrdersView.selectedOrders.priority}" editable="true" 
+                                             style="width: 180px;" >
+                                <f:selectItem itemLabel="Normal" itemValue="Normal" />
+                                <f:selectItem itemLabel="Urgent" itemValue="Urgent" />
+                                <p:ajax event="change" update="@this" />
+                            </p:selectOneMenu>
                         </p:panelGrid>
                     </p:outputPanel>
                 </p:dialog>
