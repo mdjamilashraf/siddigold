@@ -67,6 +67,10 @@
                                 <p:selectOneMenu value="#{workshopOrdersView.searchParam.orderTyp}" id="orderTyp" style="width: 80px;" >
                                     <f:selectItems value="#{workshopOrdersView.orderTypList}" />
                                 </p:selectOneMenu>
+                                <p:outputLabel value="Priority" />
+                                <p:selectOneMenu value="#{workshopOrdersView.searchParam.priorityTyp}" id="priorityTyp" style="width: 60px;" >
+                                    <f:selectItems value="#{workshopOrdersView.priorityTypList}" />
+                                </p:selectOneMenu>
                                 <p:outputLabel value="Item" />
                                 <p:inputText value="#{workshopOrdersView.searchParam.itemCode}" style="width: 50px;" autocomplete="off"/>
                                 <p:outputLabel value="RefNo"/>

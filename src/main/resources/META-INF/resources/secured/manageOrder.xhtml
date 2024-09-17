@@ -69,8 +69,12 @@
                                     <f:selectItems value="#{manageSalesOrderView.workshopList}" />
                                 </p:selectOneMenu>
                                 <p:outputLabel value="Type" />
-                                <p:selectOneMenu value="#{manageSalesOrderView.searchParam.orderTyp}" id="orderTyp" style="width: 80px;" >
+                                <p:selectOneMenu value="#{manageSalesOrderView.searchParam.orderTyp}" id="orderTyp" style="width: 60px;" >
                                     <f:selectItems value="#{manageSalesOrderView.orderTypList}" />
+                                </p:selectOneMenu>
+                                <p:outputLabel value="Priority" />
+                                <p:selectOneMenu value="#{manageSalesOrderView.searchParam.priorityTyp}" id="priorityTyp" style="width: 60px;" >
+                                    <f:selectItems value="#{manageSalesOrderView.priorityTypList}" />
                                 </p:selectOneMenu>
                                 <p:outputLabel value="Item" rendered="false"/>
                                 <p:inputText value="#{manageSalesOrderView.searchParam.itemCode}" style="width: 50px;" placeholder="Item" autocomplete="off"/>

@@ -288,6 +288,15 @@ public class SalesOrderServiceImpl implements SalesOrderService {
     }
 
     @Override
+    public List<SelectItem> getPriorityTypList() {
+        List<SelectItem> list = new ArrayList<>();
+        list.add(new SelectItem(null, "All"));
+        list.add(new SelectItem("Normal", "Normal"));
+        list.add(new SelectItem("Urgent", "Urgent"));
+        return list;
+    }
+
+    @Override
     @Transactional
     public void updateOrderDtl(OrderDetailsVO ordrDtl) {
         gnrRepo.updateOrderStatusByAdmin(ordrDtl);
@@ -371,6 +380,10 @@ public class SalesOrderServiceImpl implements SalesOrderService {
 
         if (searchParam.getOrderTyp() != null && searchParam.getOrderTyp() > 0) {
             param.put("orderType", searchParam.getOrderTyp());
+        }
+        if (!StringUtils.isEmpty(searchParam.getPriorityTyp())) {
+            System.out.println("===  " + searchParam.getPriorityTyp());
+            param.put("priority", searchParam.getPriorityTyp());
         }
         if (!StringUtils.isEmpty(searchParam.getItemCode())) {
             param.put("itemCode", searchParam.getItemCode().toUpperCase());
@@ -678,7 +691,5 @@ public class SalesOrderServiceImpl implements SalesOrderService {
         long cnt = salesOrderRepo.checkValueExistByOrderNo(orderNo);
         return (int) cnt;
     }
-    
-    
 
 }

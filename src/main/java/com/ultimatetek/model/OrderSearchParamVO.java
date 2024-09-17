@@ -39,5 +39,6 @@ public class OrderSearchParamVO {
     private String workerCode;
     private Date from;
     private Date to;
+    private String priorityTyp;
     
 }

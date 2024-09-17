@@ -72,5 +72,7 @@ public interface SalesOrderService {
     public void downloadSelectedOrders(List<OrderDetailsVO> selectedOrdrLst);
 
     public int getOrderNoValue(Long orderNo);
+    
+    public List<SelectItem> getPriorityTypList();
 
 }

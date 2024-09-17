@@ -47,6 +47,7 @@ public class ManageSalesOrderView implements Serializable {
     private List<SelectItem> ordrStatusList;
     private List<SelectItem> workshopList;
     private List<SelectItem> orderTypList;
+    private List<SelectItem> priorityTypList;
     private boolean showList = false;
     private Integer updatedOrdrStatus;
     private Map<String, String> mapItemCode = new HashMap<>();
@@ -71,6 +72,7 @@ public class ManageSalesOrderView implements Serializable {
         this.ordrStatusList = salesOrderService.getOrdrStatusList();
         this.workshopList = salesOrderService.getWorkshopList();
         this.orderTypList = salesOrderService.getOrderTypList();
+        this.priorityTypList = salesOrderService.getPriorityTypList();
        // this.itemList = itemServices.getItemCodeList();                      
         this.mapItemCode = salesOrderService.getItemCodeMap();
        this.mapMeltingStamp = salesOrderService.getMeltingStampMap();

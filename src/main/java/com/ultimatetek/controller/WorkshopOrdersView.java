@@ -60,6 +60,7 @@ public class WorkshopOrdersView implements Serializable {
     private List<SelectItem> orderTypList;
     private List<SelectItem> workerList;
     private List<SelectItem> wrkshpStatusList;
+    private List<SelectItem> priorityTypList;
     private boolean showList = false;
     private Integer updatedOrdrStatus;
     private Map<String, String> mapItemCode = new HashMap<>();
@@ -81,6 +82,7 @@ public class WorkshopOrdersView implements Serializable {
         this.workshopList = salesOrderService.getWorkshopList();
         
         this.orderTypList = salesOrderService.getOrderTypList();
+        this.priorityTypList = salesOrderService.getPriorityTypList();
         this.mapItemCode = salesOrderService.getItemCodeMap();
         if (this.userGrp == 2) {
             this.wrkshpCode = this.wrkshpUsrCode;
