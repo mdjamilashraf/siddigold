@@ -554,7 +554,7 @@ public class GeneralRepoImpl implements GeneralRepo {
     public List<OrderDetailsVO> getTodayOrderDue(String userCode, String todayDate) {
         String HQL = "Select d.rcrdNo, d.itemCode, d.itemWeight, d.itemSize, d.itemQty, d.dueDate, d.crtDate, "
                 + "d.refNo, d.salesOrder.orderNo, c.custName, d.wrkshpCode, "
-                + "(select itmName from ItemMst t where t.itmCode=d.itemCode) "
+                + "(select itmName from ItemMst t where t.itmCode=d.itemCode), d.priority "
                 + "from SalesOrder m, OrderDetailsJewellery d, CustomerDetailOthr c "
                 + "where m.orderNo = d.salesOrder.orderNo and m.custCode = c.custCode and "
                 + "d.dueDate <= \'"+todayDate+"\'  and wrkshp_status in (1,2) ";
@@ -582,6 +582,7 @@ public class GeneralRepoImpl implements GeneralRepo {
                 ordrDtl.setCustName((String) obj[9]);
                 ordrDtl.setWrkshpCode((String) obj[10]);
                 ordrDtl.setItemName((String) obj[11]);
+                ordrDtl.setPriority((String) obj[12]);
                 list.add(ordrDtl);
             }
         }

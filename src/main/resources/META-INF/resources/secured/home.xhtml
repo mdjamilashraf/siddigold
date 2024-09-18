@@ -77,6 +77,7 @@
                         <p:outputPanel id="ordrDueTodayOutPnl">
                             <p:dataTable rendered="#{not empty dashboardView.todayOrdersDue}" 
                                          value="#{dashboardView.todayOrdersDue}" var="ordr"
+                                         rowStyleClass="#{ordr.priority eq 'Urgent' ? 'row-highlight' : null}"
                                          rowKey="#{ordr.orderNo}" style="width: 75%" scrollable="true" scrollHeight="300">
                                 <f:facet name="header">
                                     Today's Due Order
